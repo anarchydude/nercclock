@@ -1,10 +1,11 @@
-# Requires pyserial to be installed to reference serial
+## Requires pyserial to be installed to reference serial
+## For changes to take effect, the script must be stopped, and started again. In addition, the fight will have to start for the clock changes to refresh in memory.
 import serial
 import time
 
-file_name = "serial.html" # Once created, open this file in a browser.
+file_name = "serial.html" # Once created, open this file in a browser. Reference this file in OBS
 
-# Adapt serial port nr. & baud rate to your system. Currently on the stream box, COM3 is the receiver.
+# Adapt serial port number & baud rate to your system.
 serial_port = 'COM3'
 baudrate = 38400
 
@@ -14,9 +15,10 @@ def write_page(data_list):
     fo.write("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>")
     fo.write("<meta http-equiv='refresh' content='1'>")
     fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
-    fo.write("<body style='background-color:#000000;'>")
-    #fo.write("<p style='color:#FFFFFF';font-size: 40px>")
-    fo.write("<font size='6' color='#ffffff'>")
+    ## Background below needs to be transparent for OBS to pick up just the text.
+    #fo.write("<body style='background-color:#000000;'>")
+    fo.write("<p style='color:#FFFFFF;font-size: 120px;text-align: center;font-family: Impact'>") # p style needs a single quote around the entire set of parameters for it to work correctly.
+    #fo.write("<font size='12' color='#ffffff'>") # Older method, no longer needed.
     fo.write(data_str)
 	
 

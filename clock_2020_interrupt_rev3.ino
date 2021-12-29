@@ -1,3 +1,5 @@
+// Must download Conceptinetics library from SourceForge (https://sourceforge.net/projects/dmxlibraryforar/). JC_Button and Neopixel are available in Aruduino library manager.
+// If using VS Code... check back in later version of script
 #include <Conceptinetics.h>
 #include <Rdm_Defines.h>
 #include <Rdm_Uid.h>
