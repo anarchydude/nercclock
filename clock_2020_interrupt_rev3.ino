@@ -1,5 +1,3 @@
-// Must download Conceptinetics library from SourceForge (https://sourceforge.net/projects/dmxlibraryforar/). JC_Button and Neopixel are available in Aruduino library manager.
-// If using VS Code... check back in later version of script
 #include <Conceptinetics.h>
 #include <Rdm_Defines.h>
 #include <Rdm_Uid.h>
@@ -59,9 +57,7 @@ DMX_Master        dmx_master ( DMX_MASTER_CHANNELS, RXEN_PIN );
 #define SET_CYCLEPLAY 0X19//data is needed 00 start; 01 close 
 #define SET_DAC 0X17//data is needed 00 start DAC OUTPUT;01 DAC no output 
 
-static int8_t Send_buf[8] = {0} ;//The MP3 player undestands orders in a 8 int string 
-
-
+static int8_t Send_buf[8] = {0} ;//The MP3 player understands orders in a 8 int string 
 
 
 Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -254,11 +250,11 @@ if ((waiting_for_players == false) and (active == true)){
 
 if (pause_db.wasPressed() and (run_clock == true)) {
   paused = !paused;
+  //{color = ORANGE;} // need to define this color above.
+  // Insert sound here for pause
   digitalWrite(pausel, paused);
     
 }
-
-
 
 //Judge Stop
 //if clock_run set it to false
@@ -280,7 +276,7 @@ if ((digitalRead(stopb) == false) and (run_clock)){
 }
 
 //Judge Start
-
+//Will need to look into moving the run_clock = true inside of tree_start so that the christmas tree can stay lit while the clock starts.
 if ((digitalRead(startb) == false) and (run_clock == false)){
  clk_time = set_clk_tim;
  digitalWrite(startl, true);
@@ -323,7 +319,93 @@ if (count_pulse & run_clock & !paused) {
  Serial1.print(c2, DEC);
  Serial1.println(c3, DEC);
 
-  if (clk_time > 10) {color = GREEN;}
+// This section is good!
+// Two min warning
+  if (clk_time == 120) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0107);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1907); // Play two min warning
+  }
+
+  // One min warning
+  if (clk_time == 60) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0108);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1908); // Play one min warning
+  }
+
+  // 10 seconds countdown
+  if (clk_time == 10) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+  
+  // 10 seconds countdown
+  if (clk_time == 9) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+// 10 seconds countdown
+  if (clk_time == 8) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 7) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 6) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 5) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 4) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 3) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 2) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+// 10 seconds countdown
+  if (clk_time == 1) {
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
+  }
+
+  // This section is good! Yellow gets funky depending on the amount of LEDs being on.
+  if (clk_time > 60) {color = GREEN;}
+  if ((clk_time <=60) && (clk_time >=11)) {color = YELLOW;}
   if (clk_time <=10) {color = RED;}
 
   strip.clear();
@@ -332,13 +414,14 @@ if (count_pulse & run_clock & !paused) {
   led_num(2, c3, color);
   strip.show();
 
- 
 }
-
 
 //Times up
 if (clk_time == 0) {
-  //play sound  
+  //Sound is not working. Investigate.
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -445,7 +528,10 @@ void rainbow(int wait) {
 
 
 void red_ready() {
-  sendCommand(CMD_PLAY_WITHVOLUME, 0X1903);
+  // Sound not working. Investigate
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1903);
   ready_r = true;
   digitalWrite(LED_R,HIGH);
   led_num(0,0,RED);
@@ -454,7 +540,9 @@ void red_ready() {
 }
 
 void blue_ready() {
-  sendCommand(CMD_PLAY_WITHVOLUME, 0X1902);
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1902);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
   led_num(2,0,BLUE);
@@ -465,32 +553,34 @@ void blue_ready() {
 
 void tree_start() {
   delay (100);
-    sendCommand(CMD_PLAY_WITHVOLUME, 0X1901); // Play start sound.
-
+    sendCommand(CMD_SET_VOLUME, 0x19);
+    sendCommand(CMD_PLAY_WITHFOLDER, 0x0101);
+    //sendCommand(CMD_PLAY_WITHVOLUME, 0X1901); // Play start sound. Currently not hearing that one. Mapping off?
+  // Set the delays for a longer light time with a blip of dark, then extend green start for 5 secs.
+  // Future change, a smooth pulse
   dmx_master.setChannelValue ( 3, 88);
-  delay (500);
+  delay (750);
     dmx_master.setChannelValue ( 3, 0);
-  delay (500);
+  delay (250);
     dmx_master.setChannelValue ( 3, 88);
-  delay (500);
+  delay (750);
     dmx_master.setChannelValue ( 3, 0);
-  delay (500);
+  delay (250);
     dmx_master.setChannelValue ( 3, 88);
-  delay (500);
+  delay (750);
     dmx_master.setChannelValue ( 3, 0);
-  delay (500);
+  delay (250);
       dmx_master.setChannelValue ( 3, 35);
   delay (500);
     dmx_master.setChannelValue ( 3, 0);
-
-  
-  
 }
 
 void tree_stop() {
    digitalWrite(startl, false);
-    digitalWrite(stopl, true);
-   sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound.
+   digitalWrite(stopl, true);
+   sendCommand(CMD_SET_VOLUME, 0x19);
+   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+   //sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound.
         //dmx_master.setChannelValue ( 2, 255);
         dmx_master.setChannelValue ( 3, 17);
   delay (10000);
@@ -505,8 +595,9 @@ void tree_stop() {
 }
 
 void tap_out_red() {
-    //play sound  
-        sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound.
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound. Change this to play two sets of sounds. Tapout, then Red square tap out
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -526,13 +617,12 @@ void tap_out_red() {
     dmx_master.setChannelValue ( 3, 0);
     dmx_master.setChannelValue ( 2, 0);
     tree_stop();
-  
 }
 
 void tap_out_blue() {
-
-    //play sound  
-    sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound.
+  sendCommand(CMD_SET_VOLUME, 0x19);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104);
+  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound. Change this to play two sets of sounds. Tapout, then Blue square tap out
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -552,7 +642,6 @@ void tap_out_blue() {
     dmx_master.setChannelValue ( 3, 0);
     dmx_master.setChannelValue ( 2, 0);
     tree_stop();
-  
 }
 
 
