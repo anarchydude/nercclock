@@ -4,7 +4,7 @@
 #include <JC_Button.h>
 #include <Adafruit_NeoPixel.h>
 
-
+// Colors vars are in decimal format for the NeoPixel
 #define PIN 22
 #define NUMPIXELS 168
 #define WHITE 16777215
@@ -12,6 +12,7 @@
 #define BLUE 255
 #define RED 16711680
 #define YELLOW 16776960
+#define ORANGE 16544258
 #define LED_R 40
 #define LED_B 42
 #define TAP_R 44
@@ -51,7 +52,7 @@ DMX_Master        dmx_master ( DMX_MASTER_CHANNELS, RXEN_PIN );
 #define CMD_RESET 0X0C//CHIP RESET 
 #define CMD_PLAY 0X0D //RESUME PLAYBACK 
 #define CMD_PAUSE 0X0E //PLAYBACK IS PAUSED 
-#define CMD_PLAY_WITHFOLDER 0X0F//DATA IS NEEDED, 0x7E 06 0F 00 01 02 EF;(play the song with the directory \01\002xxxxxx.mp3 
+#define CMD_PLAY_WITHFOLDER 0X0F//DATA IS NEEDED, 0x7E 06 0F 00 01 02 EF;(play the song with the directory \01\002xxxxxx.mp3 ex. 0x0102
 #define STOP_PLAY 0X16 
 #define PLAY_FOLDER 0X17// data is needed 0x7E 06 17 00 01 XX EF;(play the 01 folder)(value xx we dont care) 
 #define SET_CYCLEPLAY 0X19//data is needed 00 start; 01 close 
@@ -76,10 +77,10 @@ void setup() {
   start_db.begin();
 
 
-// Serial to OSB
+// Start Wireless Serial port to OSB connection - set bus speed
 Serial1.begin(38400);
 
-// Serial to MP3
+// Start Serial port to MP3 board - set bus speed
 Serial3.begin(9600);
 delay(500);//Wait chip initialization is complete 
 sendCommand(CMD_SEL_DEV, DEV_TF);//select the TF card   
@@ -250,10 +251,11 @@ if ((waiting_for_players == false) and (active == true)){
 
 if (pause_db.wasPressed() and (run_clock == true)) {
   paused = !paused;
-  //{color = ORANGE;} // need to define this color above.
   // Insert sound here for pause
+  //sendCommand(CMD_SET_VOLUME, 0x19);
+  //sendCommand(CMD_PLAY_WITHFOLDER, 0x0106);
   digitalWrite(pausel, paused);
-    
+  //{color = ORANGE;} //Comment out if not working. Should return to green once restarted.
 }
 
 //Judge Stop
@@ -541,7 +543,7 @@ void red_ready() {
 
 void blue_ready() {
   sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0102); // Sound not working.. hrmm...
   //sendCommand(CMD_PLAY_WITHVOLUME, 0X1902);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
@@ -579,7 +581,7 @@ void tree_stop() {
    digitalWrite(startl, false);
    digitalWrite(stopl, true);
    sendCommand(CMD_SET_VOLUME, 0x19);
-   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105); // Sound apparently not working.. hrmm...
    //sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound.
         //dmx_master.setChannelValue ( 2, 255);
         dmx_master.setChannelValue ( 3, 17);

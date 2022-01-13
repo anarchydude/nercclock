@@ -69,6 +69,12 @@ In standby both players need to press their color button to indicate that they a
 StartTree kicks in, produces the start tones, then starts clock.
 Either Red or Blue button can be pressed for tap out during fight, which also includes pause currently.
 
+#### Color Defining ####
+
+Status color changes are set for the clock when the clock passes 1 minute left, and 10 seconds left. In addtion there is a color change on pause (that part still in progress)
+
+Colors variables are defined as decimal for the clock (Adafruit NeoPixel codebase) you can find an online converter to take hex and convert to said color.
+
 ## Current items to change ##
 
 - Adding a starttree countdown tone to the restart after pause
