@@ -85,6 +85,7 @@ Serial3.begin(9600);
 delay(500);//Wait chip initialization is complete 
 sendCommand(CMD_SEL_DEV, DEV_TF);//select the TF card   
 delay(200);//wait for 200ms 
+sendCommand(CMD_SET_VOLUME, 0x19); //set the volume now so there's less latency down the line
 
 //Clear Clock
 strip.begin();
@@ -307,6 +308,7 @@ if ((digitalRead(TAP_R) == false) and (run_clock)){
 }
 
 // run timer if run_clock = true
+// This is a whole section below...
 if (count_pulse & run_clock & !paused) {
   clk_time--;
   count_pulse = false;
@@ -324,85 +326,63 @@ if (count_pulse & run_clock & !paused) {
 // This section is good!
 // Two min warning
   if (clk_time == 120) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0107);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1907); // Play two min warning
   }
 
   // One min warning
   if (clk_time == 60) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0108);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1908); // Play one min warning
   }
 
   // 10 seconds countdown
   if (clk_time == 10) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
   
   // 10 seconds countdown
   if (clk_time == 9) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 // 10 seconds countdown
   if (clk_time == 8) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 7) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 6) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
+  //sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 5) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
+  //sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 4) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 3) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 2) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
 // 10 seconds countdown
   if (clk_time == 1) {
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1909); // Play 10 sec countdown
   }
 
   // This section is good! Yellow gets funky depending on the amount of LEDs being on.
@@ -421,9 +401,7 @@ if (count_pulse & run_clock & !paused) {
 //Times up
 if (clk_time == 0) {
   //Sound is not working. Investigate.
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -530,10 +508,7 @@ void rainbow(int wait) {
 
 
 void red_ready() {
-  // Sound not working. Investigate
-  sendCommand(CMD_SET_VOLUME, 0x19);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1903);
   ready_r = true;
   digitalWrite(LED_R,HIGH);
   led_num(0,0,RED);
@@ -542,9 +517,7 @@ void red_ready() {
 }
 
 void blue_ready() {
-  sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0102); // Sound not working.. hrmm...
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1902);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
   led_num(2,0,BLUE);
@@ -555,9 +528,7 @@ void blue_ready() {
 
 void tree_start() {
   delay (100);
-    sendCommand(CMD_SET_VOLUME, 0x19);
-    sendCommand(CMD_PLAY_WITHFOLDER, 0x0101);
-    //sendCommand(CMD_PLAY_WITHVOLUME, 0X1901); // Play start sound. Currently not hearing that one. Mapping off?
+    sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
   // Set the delays for a longer light time with a blip of dark, then extend green start for 5 secs.
   // Future change, a smooth pulse
   dmx_master.setChannelValue ( 3, 88);
@@ -580,9 +551,7 @@ void tree_start() {
 void tree_stop() {
    digitalWrite(startl, false);
    digitalWrite(stopl, true);
-   sendCommand(CMD_SET_VOLUME, 0x19);
-   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105); // Sound apparently not working.. hrmm...
-   //sendCommand(CMD_PLAY_WITHVOLUME, 0X1905); // Play stop sound.
+   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
         //dmx_master.setChannelValue ( 2, 255);
         dmx_master.setChannelValue ( 3, 17);
   delay (10000);
@@ -597,9 +566,8 @@ void tree_stop() {
 }
 
 void tap_out_red() {
-  sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound. Change this to play two sets of sounds. Tapout, then Red square tap out
+  Serial1.print("redtapout"); // Do this first, so that it outputs to OBS ASAP
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound. Change this to play Tapout, then Red square tap out
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -622,9 +590,8 @@ void tap_out_red() {
 }
 
 void tap_out_blue() {
-  sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104);
-  //sendCommand(CMD_PLAY_WITHVOLUME, 0X1904); // Play scream sound. Change this to play two sets of sounds. Tapout, then Blue square tap out
+  Serial1.print("bluetapout"); // Do this first, so that it outputs to OBS ASAP
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound. Change this to play Tapout, then Blue square tap out
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
