@@ -11,7 +11,7 @@ baudrate = 38400
 
 def write_page(data_list):
     fo = open(file_name,"w+")
-	# Start of HTML page.
+    # Start of HTML page.
     fo.write("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>")
     fo.write("<meta http-equiv='refresh' content='1'>")
     fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
@@ -22,7 +22,7 @@ def write_page(data_list):
     fo.write(data_str)
 	
 
-s = serial.Serial(serial_port,baudrate) # Open serial port.
+s = serial.Serial(serial_port,baudrate,timeout=10) # Open serial port.
 s.dtr = 0 # Reset Arduino.
 s.dtr = 1
 print("Waiting for data...");
@@ -31,15 +31,28 @@ s.reset_input_buffer() # Delete any stale data.
 
 while 1:
     data_str = s.readline().decode() # Read data & convert bytes to string type.
-    # Clean up input data.
-    # Expected format: "$,id1,value1,id2,value2,...,CRLF"
-    #data_str = data_str.replace(' ','') # Remove whitespace.
-    #data_str = data_str.replace('\r','') # Remove return.
-    #data_str = data_str.replace('\n','') # Remove new line.
-    #data_str += '123,65,1,999,cpv,236' # Add some more data
-    print(data_str)
-    # Split data in fields separated by ','.
-    data_list = data_str
-    #del data_list[0] # Remove '$'
+    print("Updating HTML...");
+    if data_str is None:
+        data_str=""
+    elif data_str=="redtapout":
+        print("Red Tap Out");
+        data_list = "<div style='width:240px;height:120px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Tap Out</div>"
+        data_str = data_list
+    elif data_str=="bluetapout":
+        print("Blue Tap Out");
+        data_list = "<div style='width:240px;height:120px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Tap Out</div>"
+        data_str = data_list
+    else:
+        # Clean up input data.
+        # Expected format: "$,id1,value1,id2,value2,...,CRLF"
+        #data_str = data_str.replace(' ','') # Remove whitespace.
+        #data_str = data_str.replace('\r','') # Remove return.
+        #data_str = data_str.replace('\n','') # Remove new line.
+        #data_str += '123,65,1,999,cpv,236' # Add some more data
+        print(data_str)
+        # Split data in fields separated by ','.
+        data_list = data_str
+        #del data_list[0] # Remove '$'
+
     # Write HTML page.
     write_page(data_list)
