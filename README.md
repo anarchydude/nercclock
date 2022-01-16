@@ -51,15 +51,27 @@ Folder Structure
 
 | Serial Address | Description | Audio file in folder |
 |----------------|-------------|----------------------|
-| 0X1901 | Start (beep beep beep, boop) | 001xxxxx.mp3
-| 0X1902 | Blue Ready | 002xxxxx.mp3
-| 0X1903 | Red Ready | 003xxxxx.mp3
-| 0X1904 | Tap Out | 004xxxxx.mp3
-| 0X1905 | Stop | 005xxxxx.mp3
+| 0X0101 | Start (beep beep beep, boop) | 001xxxxx.mp3
+| 0X0102 | Blue Ready | 002xxxxx.mp3
+| 0X0103 | Red Ready | 003xxxxx.mp3
+| 0X0104 | Tap Out | 004xxxxx.mp3
+| 0X0105 | Stop | 005xxxxx.mp3
+| 0x0106 | |
+| 0x0107 | 2 Min Warning | 007xxxxx.mp3
+| 0x0108 | 1 Min Warning | 008xxxxx.mp3
+| 0x0109 | 10 sec Countdown Beep | 009xxxxx.mp3
 
 ### Link to OBS ###
 
 There is a serial output in the script that pipes to the wireless USB serial transmitter. pyserial script with serial receiver converts the output to a webpage for consumption in OBS.
+
+#### Timer Output ####
+
+Serial output prints out the time each second, and is printed out on the HTML page. If there is no data, the page will clear data after 10 seconds.
+
+#### Tap Out Output ####
+
+Serial output prints out the string 'redtapout' or 'bluetapout' upon the tapout button being pressed during fight. That string is interpreted to output a colored rectangle with the proper text indicating that said square has tapped out. Data clears after 10 seconds of no input.
 
 ### Timer Breakdown ###
 
