@@ -163,7 +163,8 @@ void loop() {
 
 pause_db.read();
 start_db.read();
-  
+
+// If both player ready buttons are pressed, fight becomes active, but clock is not running, flash the start button 
 if ((waiting_for_players == false) and (active == true) and (run_clock == false)) {
     digitalWrite(startl, flash);
 }
@@ -252,11 +253,9 @@ if ((waiting_for_players == false) and (active == true)){
 
 if (pause_db.wasPressed() and (run_clock == true)) {
   paused = !paused;
-  // Insert sound here for pause
-  //sendCommand(CMD_SET_VOLUME, 0x19);
-  //sendCommand(CMD_PLAY_WITHFOLDER, 0x0106);
+  // Insert sound here for pause - endCommand(CMD_PLAY_WITHFOLDER, 0x0106);
   digitalWrite(pausel, paused);
-  //{color = ORANGE;} //Comment out if not working. Should return to green once restarted.
+  //{color = ORANGE;} //Change clock to Orange.
 }
 
 //Judge Stop
