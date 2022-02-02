@@ -65,7 +65,7 @@ Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
  int clk_time = 180;
  int c1, c2, c3, dig, num, baseled, set_clk_tim = 180;
  long color;
- bool count_pulse, run_clock, match_active, ready_b, ready_r, active, waiting_for_players, flash, paused;
+ bool count_pulse, run_clock, match_active, ready_b, ready_r, active, waiting_for_players, flash, paused, red_tap_out, blue_tap_out;
 
  Button pause_db(pauseb);
  Button start_db(startb);
@@ -132,8 +132,8 @@ pinMode(stopl,OUTPUT);
 
   //DMX
     dmx_master.enable (); 
-      dmx_master.setChannelRange ( 1, 8, 0 );
-      dmx_master.setChannelValue (1,255);
+      dmx_master.setChannelRange ( 1, 8, 0 ); // ( begin_channel, end_channel, byte_value )
+      dmx_master.setChannelValue (1,255); // ( channel, byte_value )
 
 //rainbow(0);
  strip.clear();
@@ -161,261 +161,266 @@ pinMode(stopl,OUTPUT);
 
 void loop() {
 
-pause_db.read();
-start_db.read();
+  pause_db.read();
+  start_db.read();
 
-// If both player ready buttons are pressed, fight becomes active, but clock is not running, flash the start button 
-if ((waiting_for_players == false) and (active == true) and (run_clock == false)) {
-    digitalWrite(startl, flash);
-}
-
-
-
-
-
-if ((active == false) and (waiting_for_players == true)){
-
-// Red Tap in loop
-//if not clock_run and button then play noise, led pattern
-
-if (digitalRead(TAP_R) == false){
-  red_ready();
-}
-
-if ((ready_r == false) and (waiting_for_players == true)){
-  digitalWrite(LED_R, flash);
-}
-
-// Blue Tap in loop
-//if not clock_run and button then play noise, led pattern
-
-if (digitalRead(TAP_B) == false){
-  blue_ready();
-}
-
-if ((ready_b == false) and (waiting_for_players == true)){
-  digitalWrite(LED_B, flash);
-}
-
- if(start_db.pressedFor(2000)) {
-  blue_ready();
-  red_ready();
- }
-
-if ((ready_r == true) and (ready_b == true)) {
-  //run_clock = true;
-  waiting_for_players = false;
-  //tree_start();
-  active = true; //move to judge start
+  // If both player ready buttons are pressed, fight becomes active, but clock is not running, flash the start button 
+  if ((waiting_for_players == false) and (active == true) and (run_clock == false)) {
+      digitalWrite(startl, flash);
   }
 
 
-  
-//Judge 2 minute set
-//Set clk_time to 120
-
-if (digitalRead(min2b) == false){
-  set_clk_tim = 120;
-  digitalWrite(min2l, true);
-  digitalWrite(min3l, false);
-  digitalWrite(min5l, false);  
-}
-
-//Judge 3 minute set
-//Set clk_time to 180
-
-if (digitalRead(min3b) == false){
-  set_clk_tim = 180;
-  digitalWrite(min3l, true);
-  digitalWrite(min2l, false);
-  digitalWrite(min5l, false);  
-}
-
-//Judge 5 minute set
-//Set clk_time to 300
-
-if (digitalRead(min5b) == false){
-  set_clk_tim = 300;
-  digitalWrite(min5l, true);
-  digitalWrite(min3l, false);
-  digitalWrite(min2l, false);  
-}
-
-}
-
-if ((waiting_for_players == false) and (active == true)){
-
-//Judge Pause
 
 
-//if run_clock = true, set it to false
-//if run_clock = false, set it to true
 
-if (pause_db.wasPressed() and (run_clock == true)) {
-  paused = !paused;
-  // Insert sound here for pause - endCommand(CMD_PLAY_WITHFOLDER, 0x0106);
-  digitalWrite(pausel, paused);
-  //{color = ORANGE;} //Change clock to Orange.
-}
+  if ((active == false) and (waiting_for_players == true)){
 
-//Judge Stop
-//if clock_run set it to false
-//play sound
+    // Red Tap in loop
+    //if not clock_run and button then play noise, led pattern
 
-if ((digitalRead(stopb) == false) and (run_clock)){
-  run_clock = false;
-  clk_time = set_clk_tim;
-  active = false;
-  ready_b = false;
-  ready_r = false;
-  delay(10);
-  digitalWrite(LED_R,LOW);
-  delay(10);
-  digitalWrite(LED_B,LOW);
-  delay(10);
-  waiting_for_players = true;
-  tree_stop();
-}
+    if (digitalRead(TAP_R) == false){
+      red_ready();
+    }
 
-//Judge Start
-//Will need to look into moving the run_clock = true inside of tree_start so that the christmas tree can stay lit while the clock starts.
-if ((digitalRead(startb) == false) and (run_clock == false)){
- clk_time = set_clk_tim;
- digitalWrite(startl, true);
- tree_start();
- run_clock = true;
- 
-}
+    if ((ready_r == false) and (waiting_for_players == true)){
+      digitalWrite(LED_R, flash);
+    }
 
+    // Blue Tap in loop
+    //if not clock_run and button then play noise, led pattern
 
-//Blue Tap Out
-//if clock_run set it to false
-//play noise
-//tap out animation
+    if (digitalRead(TAP_B) == false){
+      blue_ready();
+    }
 
-if ((digitalRead(TAP_B) == false) and (run_clock)){
-  tap_out_blue();
-}
+    if ((ready_b == false) and (waiting_for_players == true)){
+      digitalWrite(LED_B, flash);
+    }
 
-//Red Tap Out
-//if clock_run set it to false
-//play noise
-//tap out animation
+    if(start_db.pressedFor(2000)) {
+      blue_ready();
+      red_ready();
+    }
 
-if ((digitalRead(TAP_R) == false) and (run_clock)){
-  tap_out_red();
-}
+    if ((ready_r == true) and (ready_b == true)) {
+      //run_clock = true;
+      waiting_for_players = false;
+      //tree_start();
+      active = true; //move to judge start
+    }
 
-// run timer if run_clock = true
-// This is a whole section below...
-if (count_pulse & run_clock & !paused) {
-  clk_time--;
-  count_pulse = false;
-  c1 = clk_time / 60;
-  c2 = (clk_time % 60)/10;
-  c3 = (clk_time % 60) % 10;
+    
+    //Judge 2 minute set
+    //Set clk_time to 120
 
-// output clock to OBS
+    if (digitalRead(min2b) == false){
+      set_clk_tim = 120;
+      digitalWrite(min2l, true);
+      digitalWrite(min3l, false);
+      digitalWrite(min5l, false);  
+    }
 
- Serial1.print(c1, DEC);
- Serial1.print(":");
- Serial1.print(c2, DEC);
- Serial1.println(c3, DEC);
+    //Judge 3 minute set
+    //Set clk_time to 180
 
-// This section is good!
-// Two min warning
-  if (clk_time == 120) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0107);
+    if (digitalRead(min3b) == false){
+      set_clk_tim = 180;
+      digitalWrite(min3l, true);
+      digitalWrite(min2l, false);
+      digitalWrite(min5l, false);  
+    }
+
+    //Judge 5 minute set
+    //Set clk_time to 300
+
+    if (digitalRead(min5b) == false){
+      set_clk_tim = 300;
+      digitalWrite(min5l, true);
+      digitalWrite(min3l, false);
+      digitalWrite(min2l, false);  
+    }
+
   }
 
-  // One min warning
-  if (clk_time == 60) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0108);
+  if ((waiting_for_players == false) and (active == true)){
+
+    //Judge Pause
+
+
+    //if run_clock = true, set it to false
+    //if run_clock = false, set it to true
+
+    if (pause_db.wasPressed() and (run_clock == true)) {
+      paused = !paused;
+      // Insert sound here for pause - endCommand(CMD_PLAY_WITHFOLDER, 0x0106);
+      digitalWrite(pausel, paused);
+      // Changing clock color to orange when paused needs to reflect setting c1,c2,c3 with the same time but setting color correctly (NeoPixel)
+      //c1 = clk_time / 60;
+      //c2 = (clk_time % 60)/10;
+      //c3 = (clk_time % 60) % 10;
+      //led_num(0, c1, ORANGE);
+      //led_num(1, c2, ORANGE);
+      //led_num(2, c3, ORANGE);
+    }
+
+    //Judge Stop
+    //if clock_run set it to false
+    //play sound
+
+    if ((digitalRead(stopb) == false) and (run_clock)){
+      run_clock = false;
+      clk_time = set_clk_tim;
+      active = false;
+      ready_b = false;
+      ready_r = false;
+      delay(10);
+      digitalWrite(LED_R,LOW);
+      delay(10);
+      digitalWrite(LED_B,LOW);
+      delay(10);
+      waiting_for_players = true;
+      tree_stop();
+    }
+
+    //Judge Start
+    //Will need to look into moving the run_clock = true inside of tree_start so that the christmas tree can stay lit while the clock starts.
+    if ((digitalRead(startb) == false) and (run_clock == false)){
+      clk_time = set_clk_tim;
+      digitalWrite(startl, true);
+      tree_start();
+      run_clock = true;
+    
+    }
+
+
+    //Blue Tap Out
+    //if clock_run set it to false
+    //play noise
+    //tap out animation
+
+    if ((digitalRead(TAP_B) == false) and (run_clock)){
+      tap_out_blue();
+    }
+
+    //Red Tap Out
+    //if clock_run set it to false
+    //play noise
+    //tap out animation
+
+    if ((digitalRead(TAP_R) == false) and (run_clock)){
+      tap_out_red();
+    }
+
+    // run timer if run_clock = true
+    // Essentially, if the clock is running, and not paused..
+    if (count_pulse & run_clock & !paused) {
+      clk_time--;
+      count_pulse = false;
+      c1 = clk_time / 60;
+      c2 = (clk_time % 60)/10;
+      c3 = (clk_time % 60) % 10;
+
+      // output clock to OBS
+
+      Serial1.print(c1, DEC);
+      Serial1.print(":");
+      Serial1.print(c2, DEC);
+      Serial1.println(c3, DEC);
+
+      // ##Clock warnings##
+      // Two min warning
+      if (clk_time == 120) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0107);
+      }
+
+      // One min warning
+      if (clk_time == 60) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0108);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 10) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+      
+      // 10 seconds countdown
+      if (clk_time == 9) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+      
+      // 10 seconds countdown
+      if (clk_time == 8) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 7) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 6) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 5) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 4) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 3) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 2) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // 10 seconds countdown
+      if (clk_time == 1) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
+      }
+
+      // Color changes to LED clock - time milestones
+      if (clk_time > 60) {color = GREEN;}
+      if ((clk_time <=60) && (clk_time >=11)) {color = YELLOW;}
+      if (clk_time <=10) {color = RED;}
+
+      // Clear the panel, set each of the three digits with the clock time above, and what color.
+      strip.clear();
+      led_num(0, c1, color);
+      led_num(1, c2, color);
+      led_num(2, c3, color);
+      strip.show();
+
+    }
+
+    //Times up
+    if (clk_time == 0) {
+      //Sound is not working. Investigate.
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+      run_clock = false;
+      clk_time = set_clk_tim;
+      active = false;
+      ready_b = false;
+      ready_r = false;
+      delay(10);
+      digitalWrite(LED_R,LOW);
+      delay(10);
+      digitalWrite(LED_B,LOW);
+      delay(10);
+      waiting_for_players = true;
+      //strip.clear();
+      //strip.show();
+      tree_stop();}
   }
-
-  // 10 seconds countdown
-  if (clk_time == 10) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-  
-  // 10 seconds countdown
-  if (clk_time == 9) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-// 10 seconds countdown
-  if (clk_time == 8) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 7) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 6) {
-  //sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 5) {
-  //sendCommand(CMD_SET_VOLUME, 0x19);
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 4) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 3) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 2) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-// 10 seconds countdown
-  if (clk_time == 1) {
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0109);
-  }
-
-  // This section is good! Yellow gets funky depending on the amount of LEDs being on.
-  if (clk_time > 60) {color = GREEN;}
-  if ((clk_time <=60) && (clk_time >=11)) {color = YELLOW;}
-  if (clk_time <=10) {color = RED;}
-
-  strip.clear();
-  led_num(0, c1, color);
-  led_num(1, c2, color);
-  led_num(2, c3, color);
-  strip.show();
-
-}
-
-//Times up
-if (clk_time == 0) {
-  //Sound is not working. Investigate.
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
-  run_clock = false;
-  clk_time = set_clk_tim;
-  active = false;
-  ready_b = false;
-  ready_r = false;
-  delay(10);
-  digitalWrite(LED_R,LOW);
-  delay(10);
-  digitalWrite(LED_B,LOW);
-  delay(10);
-  waiting_for_players = true;
-  //strip.clear();
-  //strip.show();
-  tree_stop();}
-}
 }
 
 void led_num(int dig, int num, long color) {
@@ -510,7 +515,7 @@ void red_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
   ready_r = true;
   digitalWrite(LED_R,HIGH);
-  led_num(0,0,RED);
+  led_num(0,0,RED); // Set left digit (0) to "0", color RED, then show it on the strip.
   strip.show();
   //dmx_master.setChannelValue ( 3, 17 );
 }
@@ -519,9 +524,8 @@ void blue_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
-  led_num(2,0,BLUE);
+  led_num(2,0,BLUE); // Set right digit (2) to "0", color BLUE, then show it on the strip.
   strip.show();
-
   //dmx_master.setChannelValue ( 3, 53);
 }
 
@@ -547,26 +551,60 @@ void tree_start() {
     dmx_master.setChannelValue ( 3, 0);
 }
 
+//Slightly borked, but in the right direction
 void tree_stop() {
+  if (red_tap_out) {
    digitalWrite(startl, false);
    digitalWrite(stopl, true);
-   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
-        //dmx_master.setChannelValue ( 2, 255);
-        dmx_master.setChannelValue ( 3, 17);
-  delay (10000);
+   //dmx_master.setChannelValue ( 2, 255);
+   dmx_master.setChannelValue ( 3, 17);
+   delay (10000);
+   dmx_master.setChannelValue ( 3, 0);
+   //dmx_master.setChannelValue ( 2, 0);
+   strip.clear();
+   strip.show();
+   run_clock = false;
+   digitalWrite(stopl, false);
+   paused = false;
+   digitalWrite(pausel, false);
+  }
+  if (blue_tap_out) {
+   digitalWrite(startl, false);
+   digitalWrite(stopl, true);
+   //dmx_master.setChannelValue ( 2, 255);
+   dmx_master.setChannelValue ( 7, 17);
+   delay (10000);
+   dmx_master.setChannelValue ( 7, 0);
+   //dmx_master.setChannelValue ( 2, 0);
+   strip.clear();
+   strip.show();
+   run_clock = false;
+   digitalWrite(stopl, false);
+   paused = false;
+   digitalWrite(pausel, false);
+  }
+  else {
+    digitalWrite(startl, false);
+    digitalWrite(stopl, true);
+    sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+    //dmx_master.setChannelValue ( 2, 255);
+    dmx_master.setChannelValue ( 3, 17);
+    delay (10000);
     dmx_master.setChannelValue ( 3, 0);
     //dmx_master.setChannelValue ( 2, 0);
-  strip.clear();
-  strip.show();
-  run_clock = false;
-  digitalWrite(stopl, false);
-  paused = false;
-  digitalWrite(pausel, false);
+    strip.clear();
+    strip.show();
+    run_clock = false;
+    digitalWrite(stopl, false);
+    paused = false;
+    digitalWrite(pausel, false);
+  }
 }
 
 void tap_out_red() {
   Serial1.print("redtapout"); // Do this first, so that it outputs to OBS ASAP
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound. Change this to play Tapout, then Red square tap out
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound.
+  red_tap_out = true;
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
@@ -590,7 +628,8 @@ void tap_out_red() {
 
 void tap_out_blue() {
   Serial1.print("bluetapout"); // Do this first, so that it outputs to OBS ASAP
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound. Change this to play Tapout, then Blue square tap out
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0106); // Play tapout sound
+  blue_tap_out = true;
   run_clock = false;
   clk_time = set_clk_tim;
   active = false;
