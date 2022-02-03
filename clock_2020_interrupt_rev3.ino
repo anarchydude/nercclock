@@ -135,8 +135,8 @@ pinMode(stopl,OUTPUT);
       dmx_master.setChannelRange ( 1, 8, 0 ); // ( begin_channel, end_channel, byte_value )
       dmx_master.setChannelValue (1,255); // ( channel, byte_value )
 
-//rainbow(0);
- strip.clear();
+  //rainbow(0);
+  strip.clear();
   strip.show();
 
     set_clk_tim = 180;
@@ -145,6 +145,15 @@ pinMode(stopl,OUTPUT);
   digitalWrite(min5l, false); 
 }
 
+// ## DMX Light from Ed ##
+// 1: Master Dimmer(0~255) RGBW-Dark to Full Brightness; 
+// 2. Strobe(0~255) from slow to fast; 
+// 3. 0-17: Red; 18-35: Green; 36-53: Blue; 54--71: White; 72-88: Yellow; 89-107: Light Blue; 108-125: Purple; 126-127 Full Light; 128-169: Red & Blue Pulse Change; 170-210: 6 Color Pulse Change; 211-255: Gradient Change 
+// 4. Function Speed - Slow to Fast; 
+// 5. Red(O~255) - Dark to Full Brightness; 
+// 6. Green (0~255) - Dark to Full Brightness; 
+// 7. Blue (0~255) - Dark to Full Brightness;
+// 8, White (0~255) - Dark to Full Brightness.
 
 //void loop() {
 //  Serial1.print(digitalRead(min2b));
@@ -161,47 +170,48 @@ pinMode(stopl,OUTPUT);
 
 void loop() {
 
+  // Returns the current debounced button state, true for pressed,
+  // false for released. Call this function frequently to ensure
+  // the sketch is responsive to user input.
   pause_db.read();
   start_db.read();
 
-  // If both player ready buttons are pressed, fight becomes active, but clock is not running, flash the start button 
+  // If both player ready buttons are pressed, fight is active, but clock is not running, flash the start button 
   if ((waiting_for_players == false) and (active == true) and (run_clock == false)) {
       digitalWrite(startl, flash);
   }
 
-
-
-
-
+  // If the fight is not active, and you're waiting for players..
+  // AKA Pre-Fight
   if ((active == false) and (waiting_for_players == true)){
 
-    // Red Tap in loop
-    //if not clock_run and button then play noise, led pattern
-
+    // If the Red Tap button is pressed
     if (digitalRead(TAP_R) == false){
-      red_ready();
+      red_ready(); // Plays sound, sets red ready, notifies on clock.
     }
 
+    // If Red Tap is not set to ready, and you're waiting for players, flash the Red Tap LED
     if ((ready_r == false) and (waiting_for_players == true)){
       digitalWrite(LED_R, flash);
     }
 
-    // Blue Tap in loop
-    //if not clock_run and button then play noise, led pattern
-
+    // If the Blue Tap button is pressed
     if (digitalRead(TAP_B) == false){
       blue_ready();
     }
 
+    // If Blue Tap is not set to ready, and you're waiting for players, flash the Blue Tap LED
     if ((ready_b == false) and (waiting_for_players == true)){
       digitalWrite(LED_B, flash);
     }
 
+    // Start override. If the start button is pressed for 2 seconds, set both players ready, which kicks off judge start.. shouldn't kick it off TBH
     if(start_db.pressedFor(2000)) {
       blue_ready();
       red_ready();
     }
 
+    // If both tap buttons are pressed (set to ready), you're now not waiting for players, and the fight is now active.
     if ((ready_r == true) and (ready_b == true)) {
       //run_clock = true;
       waiting_for_players = false;
@@ -209,9 +219,8 @@ void loop() {
       active = true; //move to judge start
     }
 
-    
     //Judge 2 minute set
-    //Set clk_time to 120
+    // If the 2 min button is pressed, set clk time int to 120, light up 2 min, turn off 3 and 5 min lights
 
     if (digitalRead(min2b) == false){
       set_clk_tim = 120;
@@ -221,7 +230,7 @@ void loop() {
     }
 
     //Judge 3 minute set
-    //Set clk_time to 180
+    // If the 3 min button is pressed, set clk time int to 180, light up 3 min, turn off 2 and 5 min lights
 
     if (digitalRead(min3b) == false){
       set_clk_tim = 180;
@@ -231,7 +240,7 @@ void loop() {
     }
 
     //Judge 5 minute set
-    //Set clk_time to 300
+    // If the 5 min button is pressed, set clk time int to 300, light up 5 min, turn off 2 and 3 min lights
 
     if (digitalRead(min5b) == false){
       set_clk_tim = 300;
@@ -242,18 +251,17 @@ void loop() {
 
   }
 
+  // If you are not waiting for players, and the fight is active..
   if ((waiting_for_players == false) and (active == true)){
 
     //Judge Pause
-
-
-    //if run_clock = true, set it to false
-    //if run_clock = false, set it to true
-
+    // If the pause button was pressed, reads current state. Changes state if it was not present. Also, if the clock is running..
     if (pause_db.wasPressed() and (run_clock == true)) {
-      paused = !paused;
+      paused = !paused; // Paused = "true" becomes "not true". See below in clock IF statement. Technically paused starts false?
       // Insert sound here for pause - endCommand(CMD_PLAY_WITHFOLDER, 0x0106);
-      digitalWrite(pausel, paused);
+      digitalWrite(pausel, paused); // Pause light becomes true?
+      //dmx_master.setChannelValue( 5, 255);
+      //dmx_master.setChannelValue( 6, 140);
       // Changing clock color to orange when paused needs to reflect setting c1,c2,c3 with the same time but setting color correctly (NeoPixel)
       //c1 = clk_time / 60;
       //c2 = (clk_time % 60)/10;
@@ -292,30 +300,24 @@ void loop() {
     
     }
 
-
     //Blue Tap Out
-    //if clock_run set it to false
-    //play noise
-    //tap out animation
-
+    
     if ((digitalRead(TAP_B) == false) and (run_clock)){
       tap_out_blue();
     }
 
     //Red Tap Out
-    //if clock_run set it to false
-    //play noise
-    //tap out animation
-
+    
     if ((digitalRead(TAP_R) == false) and (run_clock)){
       tap_out_red();
     }
 
+    // Clock run Segment
     // run timer if run_clock = true
-    // Essentially, if the clock is running, and not paused..
+    // Essentially, if the clock is running, and paused is "false" (Active)
     if (count_pulse & run_clock & !paused) {
       clk_time--;
-      count_pulse = false;
+      count_pulse = false; // this stops the count pulse, right?
       c1 = clk_time / 60;
       c2 = (clk_time % 60)/10;
       c3 = (clk_time % 60) % 10;
@@ -404,7 +406,6 @@ void loop() {
 
     //Times up
     if (clk_time == 0) {
-      //Sound is not working. Investigate.
       sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
       run_clock = false;
       clk_time = set_clk_tim;
@@ -534,31 +535,68 @@ void tree_start() {
     sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
   // Set the delays for a longer light time with a blip of dark, then extend green start for 5 secs.
   // Future change, a smooth pulse
+  dmx_master.setChannelValue ( 4, 30);
   dmx_master.setChannelValue ( 3, 88);
   delay (750);
-    dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 3, 0);
   delay (250);
-    dmx_master.setChannelValue ( 3, 88);
+  dmx_master.setChannelValue ( 3, 88);
   delay (750);
-    dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 3, 0);
   delay (250);
-    dmx_master.setChannelValue ( 3, 88);
+  dmx_master.setChannelValue ( 3, 88);
   delay (750);
-    dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 3, 0);
   delay (250);
-      dmx_master.setChannelValue ( 3, 35);
-  delay (500);
-    dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 3, 35);
+  delay (1000); // The right amount of glow.. but the clock won't change over.
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 4, 0);
 }
 
-//Slightly borked, but in the right direction
 void tree_stop() {
-  if (red_tap_out) {
-   digitalWrite(startl, false);
+  digitalWrite(startl, false);
+  digitalWrite(stopl, true);
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
+  //dmx_master.setChannelValue ( 2, 255);
+  dmx_master.setChannelValue ( 3, 17);
+  delay (12000);
+  dmx_master.setChannelValue ( 3, 0);
+  //dmx_master.setChannelValue ( 2, 0);
+  strip.clear();
+  strip.show();
+  run_clock = false;
+  digitalWrite(stopl, false);
+  paused = false;
+  digitalWrite(pausel, false);
+}
+
+void tap_out_red() {
+  Serial1.print("redtapout"); // Do this first, so that it outputs to OBS ASAP
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound.
+  run_clock = false;
+  clk_time = set_clk_tim;
+  active = false;
+  ready_b = false;
+  ready_r = false;
+  delay(10);
+  digitalWrite(LED_R,LOW);
+  delay(10);
+  digitalWrite(LED_B,LOW);
+  delay(10);
+  waiting_for_players = true;
+  strip.clear();
+  strip.show();
+    dmx_master.setChannelValue ( 2, 190);
+    dmx_master.setChannelValue ( 3, 17);
+  delay (4000);
+    dmx_master.setChannelValue ( 3, 0);
+    dmx_master.setChannelValue ( 2, 0);
+     digitalWrite(startl, false);
    digitalWrite(stopl, true);
    //dmx_master.setChannelValue ( 2, 255);
    dmx_master.setChannelValue ( 3, 17);
-   delay (10000);
+   delay (12000);
    dmx_master.setChannelValue ( 3, 0);
    //dmx_master.setChannelValue ( 2, 0);
    strip.clear();
@@ -567,14 +605,36 @@ void tree_stop() {
    digitalWrite(stopl, false);
    paused = false;
    digitalWrite(pausel, false);
-  }
-  if (blue_tap_out) {
-   digitalWrite(startl, false);
-   digitalWrite(stopl, true);
-   //dmx_master.setChannelValue ( 2, 255);
-   dmx_master.setChannelValue ( 7, 17);
-   delay (10000);
-   dmx_master.setChannelValue ( 7, 0);
+    //tree_stop();
+}
+
+void tap_out_blue() {
+  Serial1.print("bluetapout"); // Do this first, so that it outputs to OBS ASAP
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0106); // Play tapout sound
+  run_clock = false;
+  clk_time = set_clk_tim;
+  active = false;
+  ready_b = false;
+  ready_r = false;
+  delay(10);
+  digitalWrite(LED_R,LOW);
+  delay(10);
+  digitalWrite(LED_B,LOW);
+  delay(10);
+  waiting_for_players = true;
+  strip.clear();
+  strip.show();
+    dmx_master.setChannelValue ( 2, 190); // Set the strobe
+    dmx_master.setChannelValue ( 3, 17);  // Flash red 
+  delay (4000);
+    dmx_master.setChannelValue ( 3, 0);
+    dmx_master.setChannelValue ( 2, 0);
+  digitalWrite(startl, false);
+  digitalWrite(stopl, true);
+   //dmx_master.setChannelValue ( 1, 255);
+   dmx_master.setChannelValue ( 3, 53);
+   delay (12000);
+   dmx_master.setChannelValue ( 3, 0);
    //dmx_master.setChannelValue ( 2, 0);
    strip.clear();
    strip.show();
@@ -582,73 +642,7 @@ void tree_stop() {
    digitalWrite(stopl, false);
    paused = false;
    digitalWrite(pausel, false);
-  }
-  else {
-    digitalWrite(startl, false);
-    digitalWrite(stopl, true);
-    sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
-    //dmx_master.setChannelValue ( 2, 255);
-    dmx_master.setChannelValue ( 3, 17);
-    delay (10000);
-    dmx_master.setChannelValue ( 3, 0);
-    //dmx_master.setChannelValue ( 2, 0);
-    strip.clear();
-    strip.show();
-    run_clock = false;
-    digitalWrite(stopl, false);
-    paused = false;
-    digitalWrite(pausel, false);
-  }
-}
-
-void tap_out_red() {
-  Serial1.print("redtapout"); // Do this first, so that it outputs to OBS ASAP
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0104); // Play tapout sound.
-  red_tap_out = true;
-  run_clock = false;
-  clk_time = set_clk_tim;
-  active = false;
-  ready_b = false;
-  ready_r = false;
-  delay(10);
-  digitalWrite(LED_R,LOW);
-  delay(10);
-  digitalWrite(LED_B,LOW);
-  delay(10);
-  waiting_for_players = true;
-  strip.clear();
-  strip.show();
-    dmx_master.setChannelValue ( 2, 127);
-    dmx_master.setChannelValue ( 3, 17);
-  delay (3000);
-    dmx_master.setChannelValue ( 3, 0);
-    dmx_master.setChannelValue ( 2, 0);
-    tree_stop();
-}
-
-void tap_out_blue() {
-  Serial1.print("bluetapout"); // Do this first, so that it outputs to OBS ASAP
-  sendCommand(CMD_PLAY_WITHFOLDER, 0x0106); // Play tapout sound
-  blue_tap_out = true;
-  run_clock = false;
-  clk_time = set_clk_tim;
-  active = false;
-  ready_b = false;
-  ready_r = false;
-  delay(10);
-  digitalWrite(LED_R,LOW);
-  delay(10);
-  digitalWrite(LED_B,LOW);
-  delay(10);
-  waiting_for_players = true;
-  strip.clear();
-  strip.show();
-    dmx_master.setChannelValue ( 2, 127);
-    dmx_master.setChannelValue ( 3, 53);
-  delay (3000);
-    dmx_master.setChannelValue ( 3, 0);
-    dmx_master.setChannelValue ( 2, 0);
-    tree_stop();
+    //tree_stop();
 }
 
 
