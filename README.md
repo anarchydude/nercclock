@@ -54,9 +54,9 @@ Folder Structure
 | 0X0101 | Start (beep beep beep, boop) | 001xxxxx.mp3
 | 0X0102 | Blue Ready | 002xxxxx.mp3
 | 0X0103 | Red Ready | 003xxxxx.mp3
-| 0X0104 | Tap Out | 004xxxxx.mp3
+| 0X0104 | Red Tap Out | 004xxxxx.mp3
 | 0X0105 | Stop | 005xxxxx.mp3
-| 0x0106 | |
+| 0x0106 | Blue Tap Out | 006xxxxx.mp3
 | 0x0107 | 2 Min Warning | 007xxxxx.mp3
 | 0x0108 | 1 Min Warning | 008xxxxx.mp3
 | 0x0109 | 10 sec Countdown Beep | 009xxxxx.mp3
@@ -91,10 +91,6 @@ Colors variables are defined as decimal for the clock (Adafruit NeoPixel codebas
 
 - Adding a starttree countdown tone to the restart after pause
 - Bonus wish: adding button tap to say you are ready upon pause
-- DMX light time on starttree is very quick blips. Needs some incremental workup to intensity level perhaps?
-- Start tree should stay green when match has started. Yellow/Amber when paused, and Red when stopped.
-- Timer clock should turn yellow or amber on pause, with possible pulse in intensity.
- - Needs to be defined as a new color.
-- Tap out lighting should be red flashes, then have the color of the square who tapped stay indicated for 10-20 seconds, then clear.
+- Start tree should stay green when match has started, but not interfere with clock start.
+- Timer clock should turn yellow or amber on pause, with possible pulse in intensity. This resides with how paused is set.
 - Serial output to OBS should also include an indicator for player ready for both squares, then stop when fight starts.
-- Serial output to OBS should also include an indicator for player who taps out. Tap Out/Winner as highlight over square.
