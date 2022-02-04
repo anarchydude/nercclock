@@ -271,9 +271,9 @@ void loop() {
       //led_num(2, c3, ORANGE);
     }
 
-    //Judge Stop
-    //if clock_run set it to false
-    //play sound
+    // Judge Stop
+    // if the stop button reads false (pressed), and run_clock is true (bool)
+    // Set run_clock false, clk_time resets to the set_clk_tim, set fight as not active, both player buttons not ready, set the ready button lights to low, reset to waiting for players.
 
     if ((digitalRead(stopb) == false) and (run_clock)){
       run_clock = false;
