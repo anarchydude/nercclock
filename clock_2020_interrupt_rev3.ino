@@ -155,6 +155,22 @@ pinMode(stopl,OUTPUT);
 // 7. Blue (0~255) - Dark to Full Brightness;
 // 8, White (0~255) - Dark to Full Brightness.
 
+// ## DMX Rockville Bars
+// 1 - Red (0-255)
+// 2 - Green (0-255)
+// 3 - Blue (0-255)
+// 4 - Master Dimmer (0-255)
+// 5 - If ch 7 set to 0, Strobe speed (off 0-255 full)
+//   - If ch 7 set to 1-255, Running speed (0-255)
+// 6 - Chase mode (0-25) Mode 0, cycles through chases 1-8
+//   - Chase mode (26-255) Modes 1-9
+// 7 - Dimmer mode 0
+//   - Chase mode 1-13
+//   - Sound Mode 14-27 A0 (runs the entire A cycle all modes)
+//   - Sound mode 28-139 A1-A8
+//   - Sound mode 140-153 B0 (runs the entire B cycle all modes)
+//   - Sound mode 154-255 B1-B8
+
 //void loop() {
 //  Serial1.print(digitalRead(min2b));
 //   Serial1.print(digitalRead(min3b));
