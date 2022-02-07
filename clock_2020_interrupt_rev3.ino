@@ -275,11 +275,29 @@ void loop() {
     //Judge Pause
     // If the pause button was pressed, reads current state. Changes state if it was not present. Also, if the clock is running..
     if (pause_db.wasPressed() and (run_clock == true)) {
-      paused = !paused; // Paused = "true" becomes "not true". See below in clock IF statement. Technically paused starts false?
-      // Insert sound here for pause - endCommand(CMD_PLAY_WITHFOLDER, 0x0106);
-      digitalWrite(pausel, paused); // Pause light becomes true?
-      //dmx_master.setChannelValue( 5, 255);
-      //dmx_master.setChannelValue( 6, 140);
+      paused = !paused; // Paused = inverted from previous state. True/"not" True. See below in clock IF statement.
+      digitalWrite(pausel, paused); // Pause light becomes not true, ie. light goes on.
+      }
+
+    // Pause lights on. This needed to be separate from above statement.
+    if ((pause_db.wasPressed()) and (run_clock == true) and (paused == true)) {
+      sendCommand(CMD_PLAY_WITHFOLDER, 0x010A);
+      color = ORANGE;
+      strip.clear();
+      led_num(0, c1, color);
+      led_num(1, c2, color);
+      led_num(2, c3, color);
+      strip.show();
+      dmx_master.setChannelValue( 3, 88);
+      dmx_master.setChannelRange( 9, 10, 190);
+      dmx_master.setChannelRange( 16, 17, 190);
+    }
+    // Pause lights off
+    if ((pause_db.wasPressed()) and (run_clock == true) and (paused == false)) {
+      //sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to work out keeping clock paused for restart tone.
+      dmx_master.setChannelValue( 3, 0);
+      dmx_master.setChannelRange( 9, 10, 0);
+      dmx_master.setChannelRange( 16, 17, 0);
     }
 
     // Judge Stop
@@ -552,28 +570,28 @@ void tree_start() {
   // Future change, a smooth pulse
   dmx_master.setChannelValue ( 4, 30);
   dmx_master.setChannelValue ( 3, 88);
-  dmx_master.setChannelRange ( 9, 11, 255);
-  dmx_master.setChannelRange ( 16, 18, 255);
+  dmx_master.setChannelRange( 9, 10, 190);
+  dmx_master.setChannelRange( 16, 17, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
-  dmx_master.setChannelRange ( 9, 11, 0);
-  dmx_master.setChannelRange ( 16, 18, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
-  dmx_master.setChannelRange ( 9, 11, 255);
-  dmx_master.setChannelRange ( 16, 18, 255);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
-  dmx_master.setChannelRange ( 9, 11, 0);
-  dmx_master.setChannelRange ( 16, 18, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
-  dmx_master.setChannelRange ( 9, 11, 255);
-  dmx_master.setChannelRange ( 16, 18, 255);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
-  dmx_master.setChannelRange ( 9, 11, 0);
-  dmx_master.setChannelRange ( 16, 18, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 35);
   dmx_master.setChannelValue ( 10, 255);
@@ -585,10 +603,15 @@ void tree_start() {
 }
 
 void tree_stop() {
+  color = RED;
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0105);
-  //dmx_master.setChannelValue ( 2, 255);
+  strip.clear();
+  led_num(0, c1, color);
+  led_num(1, c2, color);
+  led_num(2, c3, color);
+  strip.show();
   dmx_master.setChannelValue ( 3, 17);
   dmx_master.setChannelValue ( 9, 255);
   dmx_master.setChannelValue ( 16, 255);
@@ -596,7 +619,6 @@ void tree_stop() {
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelValue ( 9, 0);
   dmx_master.setChannelValue ( 16, 0);
-  //dmx_master.setChannelValue ( 2, 0);
   strip.clear();
   strip.show();
   run_clock = false;
