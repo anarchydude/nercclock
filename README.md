@@ -40,7 +40,7 @@ apt install python3 python3-serial
 
 ### Sound Files ###
 
-Files must be 128k. 320k CBR does not work.
+Supports MP3 and WAV files up to 48khz sampling. I am using 192kbps bitrate MP3s.
 
 Folder Structure
 - Root
@@ -60,6 +60,9 @@ Folder Structure
 | 0x0107 | 2 Min Warning | 007xxxxx.mp3
 | 0x0108 | 1 Min Warning | 008xxxxx.mp3
 | 0x0109 | 10 sec Countdown Beep | 009xxxxx.mp3
+| 0x010A | Pause Tone | 010xxxxx.mp3
+
+Note that with the hex structure of the serial addressing.. 10 becomes 0A, and so forth until you hit 16.
 
 ### Link to OBS ###
 
@@ -77,20 +80,29 @@ Serial output prints out the string 'redtapout' or 'bluetapout' upon the tapout 
 
 Clock starts in standby. Time is set via command box. There are 2, 3, and 5 minute buttons, with indicator lamps.
 In addition, there is a start, pause, and stop button. Pause button currently pauses clock, and needs to be pressed again to continue clock countdown.  
-In standby both players need to press their color button to indicate that they are ready. Sounds indicate that they are ready.
+In standby both players need to press their color button to indicate that they are ready. Sounds and lights indicate that they are ready.
 StartTree kicks in, produces the start tones, then starts clock.
 Either Red or Blue button can be pressed for tap out during fight, which also includes pause currently.
 
 #### Color Defining ####
 
+##### NeoPixel #####
 Status color changes are set for the clock when the clock passes 1 minute left, and 10 seconds left. In addtion there is a color change on pause (that part still in progress)
 
 Colors variables are defined as decimal for the clock (Adafruit NeoPixel codebase) you can find an online converter to take hex and convert to said color.
+
+##### DMX Lighting ######
+
+Everything is a value between 0-255. See each DMX light's manuals for marking which channel does what action and at what value if needed.
+
+| DMX Command | What it does |
+| setChannelValue (channel, value) | Sets one individual channel to a specific value between 0-255
+| setChannelRange (starting channel, ending channel, value) | Sets a range between two channels (inc'l start and end), and each channel get's set to a specifc value between 0-255)
 
 ## Current items to change ##
 
 - Adding a starttree countdown tone to the restart after pause
 - Bonus wish: adding button tap to say you are ready upon pause
 - Start tree should stay green when match has started, but not interfere with clock start.
-- Timer clock should turn yellow or amber on pause, with possible pulse in intensity. This resides with how paused is set.
+- Working on pulsing the clock on pause, and possibly squares when ready.
 - Serial output to OBS should also include an indicator for player ready for both squares, then stop when fight starts.
