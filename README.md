@@ -1,12 +1,13 @@
 # NERC Timer #
 
-This is the codebase for the new NERC timer. The clock hub runs off a Mega 2560 with a pinout hat. This helps avoid interrupts when polling the timer.
+This is the codebase for the new NERC timer. The clock hub runs off a Mega 2560 with a DMX hat. This helps avoid interrupts when polling the timer.
 
 ## Equipment Pre-reqs ##
 
 - USB Serial Receiver for machine used to pull timer, and other outputs from the arduino.
-- Python, pyserial on whichever OS you are running the clock script from.
-- Heavy gauge DMX cable for clock DMX line. Will pull 5A at 5VDC. Needs to be short run.
+  - Something like this: https://diydrones.com/profiles/blogs/announcing-the-3dr-radio-telemetry-system
+- Python, and pyserial package on whichever OS you are running the clock script from.
+- Heavy gauge (we used 14ga) DMX cable for clock DMX line. Will pull 5A at 5VDC. Needs to be a shorter run.
 - Conceptinetics library for Arduino: https://sourceforge.net/projects/dmxlibraryforar/
 
 ### MicroSD Card Requirements ###
@@ -66,7 +67,7 @@ Note that with the hex structure of the serial addressing.. 10 becomes 0A, and s
 
 ### Link to OBS ###
 
-There is a serial output in the script that pipes to the wireless USB serial transmitter. pyserial script with serial receiver converts the output to a webpage for consumption in OBS.
+There is a serial output in the arduino script that pipes to the wireless USB serial transmitter. pyserial script with serial receiver converts the output to a webpage for consumption in OBS.
 
 #### Timer Output ####
 
@@ -87,7 +88,7 @@ Either Red or Blue button can be pressed for tap out during fight, which also in
 #### Color Defining ####
 
 ##### NeoPixel #####
-Status color changes are set for the clock when the clock passes 1 minute left, and 10 seconds left. In addtion there is a color change on pause (that part still in progress)
+Status color changes are set for the clock when the clock passes 1 minute left, and 10 seconds left. In addtion there is a color change on pause.
 
 Colors variables are defined as decimal for the clock (Adafruit NeoPixel codebase) you can find an online converter to take hex and convert to said color.
 
