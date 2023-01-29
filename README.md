@@ -4,11 +4,16 @@ This is the codebase for the new NERC timer. The clock hub runs off a Mega 2560 
 
 ## Equipment Pre-reqs ##
 
+- Arduino Mega, or similar. Needs the larger pin bank to accomodate the DMX Shield, and also performs better with the clock.
 - USB Serial Receiver for machine used to pull timer, and other outputs from the arduino.
   - Something like this: https://diydrones.com/profiles/blogs/announcing-the-3dr-radio-telemetry-system
 - Python, and pyserial package on whichever OS you are running the clock script from.
 - Heavy gauge (we used 14ga) DMX cable for clock DMX line. Will pull 5A at 5VDC. Needs to be a shorter run.
 - Conceptinetics library for Arduino: https://sourceforge.net/projects/dmxlibraryforar/
+- Serial MP3 Player Card. Ours has a YX5300 chipset.
+  - Something like this: https://www.amazon.com/HiLetgo-YX5300-Control-Serial-Arduino/dp/B0725RHR4D
+- DMX Shield for Arduino. Ours uses a CTC-DRA-10-R2.
+  - Docs found here: https://www.halloweenfreak.de/arduino/pdfs/DMX_Shield_Arduino_CTC-DRA-10-R2.pdf
 
 ### MicroSD Card Requirements ###
 
