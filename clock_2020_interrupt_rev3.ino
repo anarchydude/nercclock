@@ -60,15 +60,14 @@ DMX_Master        dmx_master ( DMX_MASTER_CHANNELS, RXEN_PIN );
 
 static int8_t Send_buf[8] = {0} ;//The MP3 player understands orders in a 8 int string 
 
-
 Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
- int clk_time = 180;
- int c1, c2, c3, dig, num, baseled, set_clk_tim = 180;
- long color;
- bool count_pulse, run_clock, match_active, ready_b, ready_r, active, waiting_for_players, flash, paused, red_tap_out, blue_tap_out;
+int clk_time = 180;
+int c1, c2, c3, dig, num, baseled, set_clk_tim = 180;
+long color;
+bool count_pulse, run_clock, match_active, ready_b, ready_r, active, waiting_for_players, flash, paused, red_tap_out, blue_tap_out;
 
- Button pause_db(pauseb);
- Button start_db(startb);
+Button pause_db(pauseb);
+Button start_db(startb);
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,44 +76,44 @@ void setup() {
   start_db.begin();
 
 
-// Start Wireless Serial port to OSB connection - set bus speed
-Serial1.begin(38400);
+  // Start Wireless Serial port to OSB connection - set bus speed
+  Serial1.begin(38400);
 
-// Start Serial port to MP3 board - set bus speed
-Serial3.begin(9600);
-delay(500);//Wait chip initialization is complete 
-sendCommand(CMD_SEL_DEV, DEV_TF);//select the TF card   
-delay(200);//wait for 200ms 
-sendCommand(CMD_SET_VOLUME, 0x19); //set the volume now so there's less latency down the line
+  // Start Serial port to MP3 board - set bus speed
+  Serial3.begin(9600);
+  delay(500);//Wait chip initialization is complete 
+  sendCommand(CMD_SEL_DEV, DEV_TF);//select the TF card   
+  delay(200);//wait for 200ms 
+  sendCommand(CMD_SET_VOLUME, 0x19); //set the volume now so there's less latency down the line
 
-//Clear Clock
-strip.begin();
-strip.setBrightness(255);
+  //Clear Clock
+  strip.begin();
+  strip.setBrightness(255);
 
-pinMode(TAP_R,INPUT_PULLUP);
-pinMode(TAP_B,INPUT_PULLUP);
-pinMode(LED_R,OUTPUT);
-pinMode(LED_B,OUTPUT);
-digitalWrite(LED_R,LOW);
-digitalWrite(LED_B,LOW);
-waiting_for_players = true;
+  pinMode(TAP_R,INPUT_PULLUP);
+  pinMode(TAP_B,INPUT_PULLUP);
+  pinMode(LED_R,OUTPUT);
+  pinMode(LED_B,OUTPUT);
+  digitalWrite(LED_R,LOW);
+  digitalWrite(LED_B,LOW);
+  waiting_for_players = true;
 
-pinMode(min3b,INPUT_PULLUP);
-pinMode(min5b,INPUT_PULLUP);
-pinMode(min2b,INPUT_PULLUP);
-pinMode(pauseb,INPUT_PULLUP);
-pinMode(startb,INPUT_PULLUP);
-pinMode(stopb,INPUT_PULLUP);
+  pinMode(min3b,INPUT_PULLUP);
+  pinMode(min5b,INPUT_PULLUP);
+  pinMode(min2b,INPUT_PULLUP);
+  pinMode(pauseb,INPUT_PULLUP);
+  pinMode(startb,INPUT_PULLUP);
+  pinMode(stopb,INPUT_PULLUP);
 
-pinMode(min3l,OUTPUT);
-pinMode(min5l,OUTPUT);
-pinMode(min2l,OUTPUT);
-pinMode(pausel,OUTPUT);
-pinMode(startl,OUTPUT);
-pinMode(stopl,OUTPUT);
+  pinMode(min3l,OUTPUT);
+  pinMode(min5l,OUTPUT);
+  pinMode(min2l,OUTPUT);
+  pinMode(pausel,OUTPUT);
+  pinMode(startl,OUTPUT);
+  pinMode(stopl,OUTPUT);
 
-// configure interrupt for 1 second pulse
- noInterrupts();
+  // configure interrupt for 1 second pulse
+  noInterrupts();
   // Clear registers
   TCCR1A = 0;
   TCCR1B = 0;
@@ -131,17 +130,17 @@ pinMode(stopl,OUTPUT);
   interrupts();
 
   //DMX
-    dmx_master.enable (); 
-      dmx_master.setChannelRange ( 1, 24, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
-      dmx_master.setChannelValue (1,255); // ( channel, byte_value ) By default, we are setting the master dimmer of the Amazon light to full brightness.
-      dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
-      dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
+  dmx_master.enable (); 
+  dmx_master.setChannelRange ( 1, 24, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
+  dmx_master.setChannelValue (1,255); // ( channel, byte_value ) By default, we are setting the master dimmer of the Amazon light to full brightness.
+  dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
+  dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
 
   //rainbow(0);
   strip.clear();
   strip.show();
 
-    set_clk_tim = 180;
+  set_clk_tim = 180;
   digitalWrite(min3l, true);
   digitalWrite(min2l, false);
   digitalWrite(min5l, false); 
@@ -457,7 +456,7 @@ void led_num(int dig, int num, long color) {
   baseled = dig * 56;
   
 
-    switch (num){
+  switch (num){
     
     case 0: 
       strip.fill(color, baseled, 48);
@@ -513,8 +512,6 @@ void led_num(int dig, int num, long color) {
 ISR(TIMER1_COMPA_vect) {
  count_pulse = true;
  flash = !flash;
-
-  
 }
 
 void rainbow(int wait) {
@@ -643,35 +640,35 @@ void tap_out_red() {
   waiting_for_players = true;
   strip.clear();
   strip.show();
-    dmx_master.setChannelValue ( 2, 200);
-    dmx_master.setChannelValue ( 3, 17);
-    dmx_master.setChannelValue ( 9, 255);
-    dmx_master.setChannelValue ( 13, 180);
-    dmx_master.setChannelValue ( 16, 255);
-    dmx_master.setChannelValue ( 20, 180);
+  dmx_master.setChannelValue ( 2, 200);
+  dmx_master.setChannelValue ( 3, 17);
+  dmx_master.setChannelValue ( 9, 255);
+  dmx_master.setChannelValue ( 13, 180);
+  dmx_master.setChannelValue ( 16, 255);
+  dmx_master.setChannelValue ( 20, 180);
   delay (4000);
-    dmx_master.setChannelRange ( 2, 3, 0);
-    dmx_master.setChannelValue ( 9, 0);
-    dmx_master.setChannelValue ( 13, 0);
-    dmx_master.setChannelValue ( 16, 0);
-    dmx_master.setChannelValue ( 20, 0);
+  dmx_master.setChannelRange ( 2, 3, 0);
+  dmx_master.setChannelValue ( 9, 0);
+  dmx_master.setChannelValue ( 13, 0);
+  dmx_master.setChannelValue ( 16, 0);
+  dmx_master.setChannelValue ( 20, 0);
 
-     digitalWrite(startl, false);
-   digitalWrite(stopl, true);
-   //dmx_master.setChannelValue ( 2, 255);
-   dmx_master.setChannelValue ( 3, 17);
-   dmx_master.setChannelValue ( 9, 255);
-   delay (12000);
-   dmx_master.setChannelValue ( 3, 0);
-   dmx_master.setChannelValue ( 9, 0);
-   //dmx_master.setChannelValue ( 2, 0);
-   strip.clear();
-   strip.show();
-   run_clock = false;
-   digitalWrite(stopl, false);
-   paused = false;
-   digitalWrite(pausel, false);
-    //tree_stop();
+  digitalWrite(startl, false);
+  digitalWrite(stopl, true);
+  //dmx_master.setChannelValue ( 2, 255);
+  dmx_master.setChannelValue ( 3, 17);
+  dmx_master.setChannelValue ( 9, 255);
+  delay (12000);
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 9, 0);
+  //dmx_master.setChannelValue ( 2, 0);
+  strip.clear();
+  strip.show();
+  run_clock = false;
+  digitalWrite(stopl, false);
+  paused = false;
+  digitalWrite(pausel, false);
+  //tree_stop();
 }
 
 void tap_out_blue() {
@@ -690,34 +687,34 @@ void tap_out_blue() {
   waiting_for_players = true;
   strip.clear();
   strip.show();
-    dmx_master.setChannelValue ( 2, 200); // Set the strobe
-    dmx_master.setChannelValue ( 3, 17);  // Flash red 
-    dmx_master.setChannelValue ( 9, 255);
-    dmx_master.setChannelValue ( 13, 180);
-    dmx_master.setChannelValue ( 16, 255);
-    dmx_master.setChannelValue ( 20, 180);
+  dmx_master.setChannelValue ( 2, 200); // Set the strobe
+  dmx_master.setChannelValue ( 3, 17);  // Flash red 
+  dmx_master.setChannelValue ( 9, 255);
+  dmx_master.setChannelValue ( 13, 180);
+  dmx_master.setChannelValue ( 16, 255);
+  dmx_master.setChannelValue ( 20, 180);
   delay (4000);
-    dmx_master.setChannelRange ( 2, 3, 0);
-    dmx_master.setChannelValue ( 9, 0);
-    dmx_master.setChannelValue ( 13, 0);
-    dmx_master.setChannelValue ( 16, 0);
-    dmx_master.setChannelValue ( 20, 0);
+  dmx_master.setChannelRange ( 2, 3, 0);
+  dmx_master.setChannelValue ( 9, 0);
+  dmx_master.setChannelValue ( 13, 0);
+  dmx_master.setChannelValue ( 16, 0);
+  dmx_master.setChannelValue ( 20, 0);
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
-   //dmx_master.setChannelValue ( 1, 255);
-   dmx_master.setChannelValue ( 3, 53);
-   dmx_master.setChannelValue ( 18, 255);
-   delay (12000);
-   dmx_master.setChannelValue ( 3, 0);
-   dmx_master.setChannelValue ( 18, 0);
-   //dmx_master.setChannelValue ( 2, 0);
-   strip.clear();
-   strip.show();
-   run_clock = false;
-   digitalWrite(stopl, false);
-   paused = false;
-   digitalWrite(pausel, false);
-    //tree_stop();
+  //dmx_master.setChannelValue ( 1, 255);
+  dmx_master.setChannelValue ( 3, 53);
+  dmx_master.setChannelValue ( 18, 255);
+  delay (12000);
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelValue ( 18, 0);
+  //dmx_master.setChannelValue ( 2, 0);
+  strip.clear();
+  strip.show();
+  run_clock = false;
+  digitalWrite(stopl, false);
+  paused = false;
+  digitalWrite(pausel, false);
+  //tree_stop();
 }
 
 
