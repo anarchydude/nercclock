@@ -4,16 +4,21 @@ This is the codebase for the new NERC timer. The clock hub runs off a Mega 2560 
 
 ## Equipment Pre-reqs ##
 
-- Arduino Mega, or similar. Needs the larger pin bank to accomodate the DMX Shield, and also performs better with the clock.
+- Arduino Mega 2560, or similar. Needs the larger pin bank to accomodate the DMX Shield, and also performs better with the clock.
+- LED Strip Lights to make your own Adafruit NeoPixel clock: https://learn.adafruit.com/adafruit-neopixel-uberguide
+  - Do note, you will need heavy gauge (we used 14ga) wiring for clock line. Will pull 5A at 5VDC. Needs to be a shorter run as well to keep the power full.
 - USB Serial Receiver for machine used to pull timer, and other outputs from the arduino.
   - Something like this: https://diydrones.com/profiles/blogs/announcing-the-3dr-radio-telemetry-system
 - Python, and pyserial package on whichever OS you are running the clock script from.
-- Heavy gauge (we used 14ga) DMX cable for clock DMX line. Will pull 5A at 5VDC. Needs to be a shorter run.
 - Conceptinetics library for Arduino: https://sourceforge.net/projects/dmxlibraryforar/
+  - Other native arduino libs that are needed:
+    - JC_Button
+    - Adafruit NeoPixel
 - Serial MP3 Player Card. Ours has a YX5300 chipset.
   - Something like this: https://www.amazon.com/HiLetgo-YX5300-Control-Serial-Arduino/dp/B0725RHR4D
 - DMX Shield for Arduino. Ours uses a CTC-DRA-10-R2.
   - Docs found here: https://www.halloweenfreak.de/arduino/pdfs/DMX_Shield_Arduino_CTC-DRA-10-R2.pdf
+- DMX Lights! Any type will do, it will all depend on what you want to accomplish with them. For our use cases, 3-9 channels were enough. We just needed to program RGB(AW), and have a healthy strobe effect.
 
 ### MicroSD Card Requirements ###
 
@@ -21,7 +26,7 @@ Up to 32GB drive, FAT16/FAT32. **MUST** be MBR format.
 
 ## Programming the Mega 2560 ##
 
-You must remove the hat before programming. The hat is drawing enough current on the bus, it will not connect otherwise.
+You must switch the jumper on the DMX Shield from EN to (not)_EN_ The hat is draws enough current on the bus that it will not connect otherwise since the port will be saturated, and the built in self fuse will trip.
 
 ## Python Items ##
 
@@ -57,16 +62,16 @@ Folder Structure
 
 | Serial Address | Description | Audio file in folder |
 |----------------|-------------|----------------------|
-| 0X0101 | Start (beep beep beep, boop) | 001xxxxx.mp3
-| 0X0102 | Blue Ready | 002xxxxx.mp3
-| 0X0103 | Red Ready | 003xxxxx.mp3
-| 0X0104 | Red Tap Out | 004xxxxx.mp3
-| 0X0105 | Stop | 005xxxxx.mp3
-| 0x0106 | Blue Tap Out | 006xxxxx.mp3
-| 0x0107 | 2 Min Warning | 007xxxxx.mp3
-| 0x0108 | 1 Min Warning | 008xxxxx.mp3
-| 0x0109 | 10 sec Countdown Beep | 009xxxxx.mp3
-| 0x010A | Pause Tone | 010xxxxx.mp3
+| 0X0101 | Start (beep beep beep, boop) | 001xxxxx.mp3 |
+| 0X0102 | Blue Ready | 002xxxxx.mp3 |
+| 0X0103 | Red Ready | 003xxxxx.mp3 |
+| 0X0104 | Red Tap Out | 004xxxxx.mp3 |
+| 0X0105 | Stop | 005xxxxx.mp3 |
+| 0x0106 | Blue Tap Out | 006xxxxx.mp3 |
+| 0x0107 | 2 Min Warning | 007xxxxx.mp3 |
+| 0x0108 | 1 Min Warning | 008xxxxx.mp3 |
+| 0x0109 | 10 sec Countdown Beep | 009xxxxx.mp3 |
+| 0x010A | Pause Tone | 010xxxxx.mp3 |
 
 Note that with the hex structure of the serial addressing.. 10 becomes 0A, and so forth until you hit 16.
 
@@ -102,12 +107,11 @@ Colors variables are defined as decimal for the clock (Adafruit NeoPixel codebas
 Everything is a value between 0-255. See each DMX light's manuals for marking which channel does what action and at what value if needed.
 
 | DMX Command | What it does |
-| setChannelValue (channel, value) | Sets one individual channel to a specific value between 0-255
-| setChannelRange (starting channel, ending channel, value) | Sets a range between two channels (inc'l start and end), and each channel get's set to a specifc value between 0-255)
+| setChannelValue (channel, value) | Sets one individual channel to a specific value between 0-255 |
+| setChannelRange (starting channel, ending channel, value) | Sets a range between two channels (inc'l start and end), and each channel get's set to a specifc value between 0-255) |
 
 ## Current items to change ##
 
-- Adding a starttree countdown tone to the restart after pause
 - Bonus wish: adding button tap to say you are ready upon pause
 - Start tree should stay green when match has started, but not interfere with clock start.
 - Working on pulsing the clock on pause, and possibly squares when ready.
