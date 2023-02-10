@@ -187,9 +187,7 @@ void setup() {
 
 void loop() {
 
-  // Returns the current debounced button state, true for pressed,
-  // false for released. Call this function frequently to ensure
-  // the sketch is responsive to user input.
+  // Returns the current debounced button state, true for pressed, false for released. Call this function frequently to ensure the sketch is responsive to user input.
   pause_db.read();
   start_db.read();
 
@@ -200,11 +198,12 @@ void loop() {
 
   // If the fight is not active, and you're waiting for players..
   // AKA Pre-Fight
-  if ((active == false) and (waiting_for_players == true)){
+  if ((active == false) and (waiting_for_players == true)) {
 
+    // A reminder that any of these statements in here do not get trumped by above statements. That is only the requirement for this section:
     // If the Red Tap button is pressed
     if (digitalRead(TAP_R) == false){
-      red_ready(); // Plays sound, sets red ready, notifies on clock.
+      red_ready(); // Runs the void red_ready function
     }
 
     // If Red Tap is not set to ready, and you're waiting for players, flash the Red Tap LED
@@ -228,6 +227,14 @@ void loop() {
       red_ready();
     }
 
+    //if ((ready_r == true)) {
+    //  Serial1.print("redready");
+    //}
+
+    //if ((ready_b == true)) {
+    //  Serial1.print("blueready");
+    //}
+    
     // If both tap buttons are pressed (set to ready), you're now not waiting for players, and the fight is now active.
     if ((ready_r == true) and (ready_b == true)) {
       //run_clock = true;
@@ -273,32 +280,34 @@ void loop() {
 
     //Judge Pause
     // If the pause button was pressed, reads current state. Changes state if it was not present. Also, if the clock is running..
-    if (pause_db.wasPressed() and (run_clock == true)) {
-      paused = !paused; // Paused = inverted from previous state. True/"not" True. See below in clock IF statement.
-      digitalWrite(pausel, paused); // Pause light becomes not true, ie. light goes on.
+    // This initial statement needs to be here to not conflict with the rest of the in-fight loop.
+    if (pause_db.wasPressed() and (run_clock == true)) {  
+
+      // Pause lights on. Paused = inverted from previous state. True/"not" True. This stops/starts the clock.
+      if ((pause_db.wasPressed()) and (run_clock == true) and (paused == false)) {
+        paused = !paused;
+        digitalWrite(pausel, true);
+        sendCommand(CMD_PLAY_WITHFOLDER, 0x010A);
+        color = ORANGE;
+        strip.clear();
+        led_num(0, c1, color);
+        led_num(1, c2, color);
+        led_num(2, c3, color);
+        strip.show();
+        dmx_master.setChannelValue( 3, 88);
+        dmx_master.setChannelRange( 9, 10, 190);
+        dmx_master.setChannelRange( 16, 17, 190);
+      } else { // could possibly let it ride underneath the parent if statement, but this ensures it runs opposite of the above statment.
+        sendCommand(CMD_PLAY_WITHFOLDER, 0x0101);
+        delay (3000); // next is to swap this with the tree start sequence within the parameters of restarting and not "starting" the fight.
+        dmx_master.setChannelValue( 3, 0);
+        dmx_master.setChannelRange( 9, 10, 0);
+        dmx_master.setChannelRange( 16, 17, 0);
+        paused = !paused;
+        digitalWrite(pausel, false); 
       }
-
-    // Pause lights on. This needed to be separate from above statement.
-    if ((pause_db.wasPressed()) and (run_clock == true) and (paused == true)) {
-      sendCommand(CMD_PLAY_WITHFOLDER, 0x010A);
-      color = ORANGE;
-      strip.clear();
-      led_num(0, c1, color);
-      led_num(1, c2, color);
-      led_num(2, c3, color);
-      strip.show();
-      dmx_master.setChannelValue( 3, 88);
-      dmx_master.setChannelRange( 9, 10, 190);
-      dmx_master.setChannelRange( 16, 17, 190);
     }
-    // Pause lights off
-    if ((pause_db.wasPressed()) and (run_clock == true) and (paused == false)) {
-      //sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to work out keeping clock paused for restart tone.
-      dmx_master.setChannelValue( 3, 0);
-      dmx_master.setChannelRange( 9, 10, 0);
-      dmx_master.setChannelRange( 16, 17, 0);
-    }
-
+  
     // Judge Stop
     // if the stop button reads false (pressed), and run_clock is true (bool)
     // Set run_clock false, clk_time resets to the set_clk_tim, set fight as not active, both player buttons not ready, set the ready button lights to low, reset to waiting for players.
@@ -562,7 +571,7 @@ void tree_start() {
   dmx_master.setChannelValue ( 9, 0);
   dmx_master.setChannelValue ( 18, 0);
   delay (100);
-    sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
   // Set the delays for a longer light time with a blip of dark, then extend green start for 5 secs.
   // Future change, a smooth pulse
   dmx_master.setChannelValue ( 4, 30);
