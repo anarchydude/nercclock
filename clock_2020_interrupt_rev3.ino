@@ -183,8 +183,6 @@ void setup() {
 
 //}
 
-
-
 void loop() {
 
   // Returns the current debounced button state, true for pressed, false for released. Call this function frequently to ensure the sketch is responsive to user input.
@@ -221,20 +219,22 @@ void loop() {
       digitalWrite(LED_B, flash);
     }
 
+    //if ((ready_r == true) and (waiting_for_players == true)) {
+    //  Serial1.print("redready");
+    //  delay(1000);
+    //}
+
+    //if ((ready_b == true) and (waiting_for_players == true)) {
+    //  Serial1.print("blueready");
+    //  delay(1000);
+    //}
+    
     // Start override. If the start button is pressed for 2 seconds, set both players ready, which kicks off judge start.. shouldn't kick it off TBH
     if(start_db.pressedFor(2000)) {
       blue_ready();
       red_ready();
     }
 
-    //if ((ready_r == true)) {
-    //  Serial1.print("redready");
-    //}
-
-    //if ((ready_b == true)) {
-    //  Serial1.print("blueready");
-    //}
-    
     // If both tap buttons are pressed (set to ready), you're now not waiting for players, and the fight is now active.
     if ((ready_r == true) and (ready_b == true)) {
       //run_clock = true;
@@ -242,6 +242,11 @@ void loop() {
       //tree_start();
       active = true; //move to judge start
     }
+
+    //if ((ready_r == true) and (ready_b == true) and (waiting_for_players == false) and (active == true)) {
+    //  Serial1.print("bothready");
+    //  delay(1000);
+    //}
 
     //Judge 2 minute set
     // If the 2 min button is pressed, set clk time int to 120, light up 2 min, turn off 3 and 5 min lights
@@ -298,11 +303,8 @@ void loop() {
         dmx_master.setChannelRange( 9, 10, 190);
         dmx_master.setChannelRange( 16, 17, 190);
       } else { // could possibly let it ride underneath the parent if statement, but this ensures it runs opposite of the above statment.
-        sendCommand(CMD_PLAY_WITHFOLDER, 0x0101);
-        delay (3000); // next is to swap this with the tree start sequence within the parameters of restarting and not "starting" the fight.
-        dmx_master.setChannelValue( 3, 0);
-        dmx_master.setChannelRange( 9, 10, 0);
-        dmx_master.setChannelRange( 16, 17, 0);
+        // add a clearing of the DMX lights here
+        tree_start();
         paused = !paused;
         digitalWrite(pausel, false); 
       }
@@ -311,7 +313,6 @@ void loop() {
     // Judge Stop
     // if the stop button reads false (pressed), and run_clock is true (bool)
     // Set run_clock false, clk_time resets to the set_clk_tim, set fight as not active, both player buttons not ready, set the ready button lights to low, reset to waiting for players.
-
     if ((digitalRead(stopb) == false) and (run_clock)){
       run_clock = false;
       clk_time = set_clk_tim;
@@ -338,13 +339,11 @@ void loop() {
     }
 
     //Blue Tap Out
-    
     if ((digitalRead(TAP_B) == false) and (run_clock)){
       tap_out_blue();
     }
 
     //Red Tap Out
-    
     if ((digitalRead(TAP_R) == false) and (run_clock)){
       tap_out_red();
     }
