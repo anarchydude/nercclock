@@ -30,7 +30,6 @@
 #define startb 32
 #define stopb 26
 
-
 //DMX
 #define DMX_MASTER_CHANNELS   24
 #define RXEN_PIN                2
@@ -70,11 +69,9 @@ Button pause_db(pauseb);
 Button start_db(startb);
 
 void setup() {
-  // put your setup code here, to run once:
-
+  // put your setup/default code here, so that you have baselines
   pause_db.begin();
   start_db.begin();
-
 
   // Start Wireless Serial port to OSB connection - set bus speed
   Serial1.begin(38400);
@@ -129,12 +126,17 @@ void setup() {
   TIMSK1 |= (1 << OCIE1A);
   interrupts();
 
-  //DMX
+  //DMX Defaults
   dmx_master.enable (); 
   dmx_master.setChannelRange ( 1, 24, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
-  dmx_master.setChannelValue (1,255); // ( channel, byte_value ) By default, we are setting the master dimmer of the Amazon light to full brightness.
-  dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
-  dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
+  //Full Brightness Dimmer - ( DMX channel, byte_value )
+  //dmx_master.setChannelValue (1,255); // By default, we are setting the master dimmer of the Amazon light to full brightness.
+  //dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
+  //dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
+  //Not so full brightness dimmer - ( DMX channel, byte_value )
+  dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
+  dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
 
   //rainbow(0);
   strip.clear();
@@ -171,17 +173,6 @@ void setup() {
 //   - Sound mode 28-139 A1-A8
 //   - Sound mode 140-153 B0 (runs the entire B cycle all modes)
 //   - Sound mode 154-255 B1-B8
-
-//void loop() {
-//  Serial1.print(digitalRead(min2b));
-//   Serial1.print(digitalRead(min3b));
-//    Serial1.print(digitalRead(min5b));
-//     Serial1.print(digitalRead(startb));
-//      Serial1.print(digitalRead(stopb));
-//       Serial1.println(digitalRead(pauseb));
-//       delay(50);
-
-//}
 
 void loop() {
 
@@ -237,9 +228,7 @@ void loop() {
 
     // If both tap buttons are pressed (set to ready), you're now not waiting for players, and the fight is now active.
     if ((ready_r == true) and (ready_b == true)) {
-      //run_clock = true;
       waiting_for_players = false;
-      //tree_start();
       active = true; //move to judge start
     }
 
@@ -304,7 +293,7 @@ void loop() {
         dmx_master.setChannelRange( 16, 17, 190);
       } else { // could possibly let it ride underneath the parent if statement, but this ensures it runs opposite of the above statment.
         // add a clearing of the DMX lights here
-        tree_start();
+        pause_start();
         paused = !paused;
         digitalWrite(pausel, false); 
       }
@@ -462,8 +451,6 @@ void loop() {
 
 void led_num(int dig, int num, long color) {
   baseled = dig * 56;
-  
-
   switch (num){
     
     case 0: 
@@ -545,7 +532,6 @@ void rainbow(int wait) {
   }
 }
 
-
 void red_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
   ready_r = true;
@@ -553,7 +539,7 @@ void red_ready() {
   led_num(0,0,RED); // Set left digit (0) to "0", color RED, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 9, 255);
-  //dmx_master.setChannelValue ( 3, 17 );
+  //dmx_master.setChannelValue ( 3, 17 ); If just running the Amazon light, this would be the eqivalent
 }
 
 void blue_ready() {
@@ -563,12 +549,12 @@ void blue_ready() {
   led_num(2,0,BLUE); // Set right digit (2) to "0", color BLUE, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 18, 255);
-  //dmx_master.setChannelValue ( 3, 53);
+  //dmx_master.setChannelValue ( 3, 53); If just running the Amazon light, this would be the eqivalent
 }
 
 void tree_start() {
-  dmx_master.setChannelValue ( 9, 0);
-  dmx_master.setChannelValue ( 18, 0);
+  dmx_master.setChannelValue ( 9, 0); // Sets Red square's Rockville bar Red DMX to 0
+  dmx_master.setChannelValue ( 18, 0); // Sets Blue square's Rockville bar Blue DMX to 0
   delay (100);
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
   // Set the delays for a longer light time with a blip of dark, then extend green start for 5 secs.
@@ -725,7 +711,6 @@ void tap_out_blue() {
   //tree_stop();
 }
 
-
 void sendCommand(int8_t command, int16_t dat) 
 { 
 delay(20); 
@@ -740,6 +725,46 @@ Send_buf[7] = 0xef; //ending byte
 for(uint8_t i=0; i<8; i++)// 
 { 
   Serial3.write(Send_buf[i]) ;
- 
 } 
-} 
+}
+
+void pause_start() {
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
+  delay (100); //Possibly move up to 200ms, ran out of time to test
+  sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
+  // Future change, a smooth pulse
+  dmx_master.setChannelValue ( 4, 30);
+  dmx_master.setChannelValue ( 3, 88);
+  dmx_master.setChannelRange( 9, 10, 190);
+  dmx_master.setChannelRange( 16, 17, 190);
+  delay (750);
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
+  delay (250);
+  dmx_master.setChannelValue ( 3, 88);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
+  delay (750);
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
+  delay (250);
+  dmx_master.setChannelValue ( 3, 88);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
+  delay (750);
+  dmx_master.setChannelValue ( 3, 0);
+  dmx_master.setChannelRange ( 9, 10, 0);
+  dmx_master.setChannelRange ( 16, 17, 0);
+  delay (250);
+  dmx_master.setChannelValue ( 3, 35);
+  dmx_master.setChannelValue ( 10, 255);
+  dmx_master.setChannelValue ( 17, 255);
+  delay (1000); // The right amount of glow.. but the clock won't change over fast enough.
+  dmx_master.setChannelRange ( 3, 4, 0);
+  dmx_master.setChannelValue ( 10, 0);
+  dmx_master.setChannelValue ( 17, 0);
+}
