@@ -15,10 +15,8 @@ def write_page(data_list):
     fo.write("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>")
     fo.write("<meta http-equiv='refresh' content='1'>")
     fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
-    ## Background below needs to be transparent for OBS to pick up just the text.
-    #fo.write("<body style='background-color:#000000;'>")
+    ## Background below should be transparent for OBS to pick up just the text, but OBS CSS can clean that up.
     fo.write("<p style='color:#FFFFFF;font-size: 120px;text-align: center;font-family: Impact'>") # p style needs a single quote around the entire set of parameters for it to work correctly.
-    #fo.write("<font size='12' color='#ffffff'>") # Older method, no longer needed.
     fo.write(data_str)
 	
 
@@ -34,13 +32,25 @@ while 1:
     print("Updating HTML...");
     if data_str is None:
         data_str=""
+    #elif data_str=="redready":
+    #    print("Red Ready");
+    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_str = data_list
+    #elif data_str=="blueready":
+    #    print("Blue Ready");
+    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_str = data_list
+    #elif data_str=="bothready":
+    #    print("Both Ready");
+    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div><div style='width:100px;height:110px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_str = data_list
     elif data_str=="redtapout":
         print("Red Tap Out");
-        data_list = "<div style='width:240px;height:120px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Tap Out</div>"
+        data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: red; font-size: 84px; font-weight: bold;'>TAP OUT</div>"
         data_str = data_list
     elif data_str=="bluetapout":
         print("Blue Tap Out");
-        data_list = "<div style='width:240px;height:120px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Tap Out</div>"
+        data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: blue; font-size: 84px; font-weight: bold;'>TAP OUT</div>"
         data_str = data_list
     else:
         # Clean up input data.
