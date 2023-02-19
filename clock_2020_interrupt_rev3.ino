@@ -536,7 +536,7 @@ void red_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
   ready_r = true;
   digitalWrite(LED_R,HIGH);
-  led_num(0,0,RED); // Set left digit (0) to "0", color RED, then show it on the strip.
+  led_num(2,0,RED); // Set right digit (2) to "0", color RED, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 9, 255);
   //dmx_master.setChannelValue ( 3, 17 ); If just running the Amazon light, this would be the eqivalent
@@ -546,7 +546,7 @@ void blue_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
-  led_num(2,0,BLUE); // Set right digit (2) to "0", color BLUE, then show it on the strip.
+  led_num(0,0,BLUE); // Set left digit (0) to "0", color BLUE, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 18, 255);
   //dmx_master.setChannelValue ( 3, 53); If just running the Amazon light, this would be the eqivalent
