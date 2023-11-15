@@ -10,15 +10,15 @@ serial_port = 'COM3'
 baudrate = 38400
 
 def write_page(data_list):
-    fo = open(file_name,"w+")
-    # Start of HTML page.
-    fo.write("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>")
-    fo.write("<meta http-equiv='refresh' content='1'>")
-    fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
-    ## Background below should be transparent for OBS to pick up just the text, but OBS CSS can clean that up.
-    fo.write("<p style='color:#FFFFFF;font-size: 120px;text-align: center;font-family: Impact'>") # p style needs a single quote around the entire set of parameters for it to work correctly.
-    fo.write(data_str)
-	
+    # Need the with statement for 
+    with open(file_name, "w+") as fo:
+        # Start of HTML page.
+        fo.write("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>")
+        fo.write("<meta http-equiv='refresh' content='1'>")
+        fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
+        ## Background below should be transparent (#FFFFFF) for OBS to pick up just the text, but OBS CSS can clean that up.
+        ## data_str needs to be converted to string from int, so this is how it should be formatted.
+        fo.write("<div style='display: flex; max-width: 280px; height: 140px; color: #FFFFFF; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: rgba(255, 0, 0, 0); font-size: 120px; font-weight: bold;'>" + (str)data_str + "</div>")
 
 s = serial.Serial(serial_port,baudrate,timeout=10) # Open serial port.
 s.dtr = 0 # Reset Arduino.
