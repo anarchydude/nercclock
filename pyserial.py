@@ -34,15 +34,15 @@ while 1:
         data_str=""
     #elif data_str=="redready":
     #    print("Red Ready");
-    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: red;'>READY</div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div></div>"
     #    data_str = data_list
     #elif data_str=="blueready":
     #    print("Blue Ready");
-    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
     #    data_str = data_list
     #elif data_str=="bothready":
     #    print("Both Ready");
-    #    data_list = "<div style='width:100px;height:110px;font-size:76px;background-color:red;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div><div style='width:100px;height:110px;font-size:76px;background-color:blue;color:#FFFFFF;font-family: Impact;margin:0 auto;text-align:center'>Ready</div>"
+    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: red;'>READY</div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
     #    data_str = data_list
     elif data_str=="redtapout":
         print("Red Tap Out");
