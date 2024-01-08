@@ -34,14 +34,28 @@ You must switch the jumper on the DMX Shield from EN to (not)_EN_ The hat is dra
 
 Use the windows installer to install python: https://www.python.org/downloads/windows/
 
+Even better, open up PowerShell, and type Python. It will bring up the Windows Store version.
+
+### Installing Python on macOS/Linux ###
+
+On macOS, use a package manager like MacPorts (sudo port install python3) or Homebrew (brew install python3)
+
+On Linux, use your package manager (apt, yum, etc..) and install python3
+
 #### pyserial ####
+
+A specific python serial package is needed for the pyserial script to run correctly since it needs to import 'serial'
 
 Download files from: http://pypi.python.org/pypi/pyserial
 Docs are at: https://pyserial.readthedocs.io/en/latest/pyserial.html#installation
 
-Unpack the tar.gz. Nagivate in to the directories and locate setup.py. From command prompt or Powershell, run:
+### Installing on Windows/macOS ###
 
-py setup.py install
+Easiest way is with pip 
+
+python3 -m pip install pyserial
+
+(If you have python symlinked to python3, just use python)
 
 ### Installing Python/pyserial on Linux ###
 
