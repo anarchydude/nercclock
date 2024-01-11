@@ -210,15 +210,15 @@ void loop() {
       digitalWrite(LED_B, flash);
     }
 
-    //if ((ready_r == true) and (waiting_for_players == true)) {
-    //  Serial1.print("redready");
-    //  delay(1000);
-    //}
+    /*if ((ready_r == true) and (waiting_for_players == true)) {
+      Serial1.print("redready");
+      delay(1000);
+    }*/
 
-    //if ((ready_b == true) and (waiting_for_players == true)) {
-    //  Serial1.print("blueready");
-    //  delay(1000);
-    //}
+    /*if ((ready_b == true) and (waiting_for_players == true)) {
+      Serial1.print("blueready");
+      delay(1000);
+    }*/
     
     // Start override. If the start button is pressed for 2 seconds, set both players ready, which kicks off judge start.. shouldn't kick it off TBH
     if(start_db.pressedFor(2000)) {
@@ -232,10 +232,10 @@ void loop() {
       active = true; //move to judge start
     }
 
-    //if ((ready_r == true) and (ready_b == true) and (waiting_for_players == false) and (active == true)) {
-    //  Serial1.print("bothready");
-    //  delay(1000);
-    //}
+    if ((ready_r == true) and (ready_b == true) and (waiting_for_players == false) and (active == true)) {
+      Serial1.print("bothready");
+      delay(1000);
+    }
 
     //Judge 2 minute set
     // If the 2 min button is pressed, set clk time int to 120, light up 2 min, turn off 3 and 5 min lights
