@@ -18,7 +18,7 @@ def write_page(data_list):
         fo.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
         ## Background below should be transparent (#FFFFFF) for OBS to pick up just the text, but OBS CSS can clean that up.
         ## data_str needs to be converted to string from int, so this is how it should be formatted.
-        fo.write("<div style='display: flex; max-width: 280px; height: 140px; color: #FFFFFF; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: rgba(255, 0, 0, 0); font-size: 120px; font-weight: bold;'>" + str(data_str) + "</div>")
+        fo.write("<div style='display: flex; max-width: 280px; height: 140px; color: #FFFFFF; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: rgba(255, 0, 0, 0); font-size: 120px; font-weight: bold; text-shadow: 4px 4px 4px #000000;'>" + str(data_str) + "</div>")
 
 s = serial.Serial(serial_port,baudrate,timeout=10) # Open serial port.
 s.dtr = 0 # Reset Arduino.
@@ -34,23 +34,23 @@ while 1:
         data_str=""
     #elif data_str=="redready":
     #    print("Red Ready");
-    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: red;'>READY</div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div></div>"
+    #    data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact;><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: red;'>READY</div><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div></div>"
     #    data_str = data_list
     #elif data_str=="blueready":
     #    print("Blue Ready");
-    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
+    #    data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact;'><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: rgba(0, 0, 255, 0);'></div><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
     #    data_str = data_list
     #elif data_str=="bothready":
     #    print("Both Ready");
-    #    data_list = "<div style='display: grid; grid-template-columns: 1fr 1fr; max-width: 280px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; line-height: 140px; align-items: center; font-family: Impact;'><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: red;'>READY</div><div style='font-size: 50px; height: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
+    #    data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact;'><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: red;'>READY</div><div style='flex: 1; display: flex; align-items: center; justify-content: center; font-size: 50px; height: 140px; width: 140px; font-weight: bold; background-color: blue;'>READY</div></div>"
     #    data_str = data_list
     elif data_str=="redtapout":
         print("Red Tap Out");
-        data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: red; font-size: 84px; font-weight: bold;'>TAP OUT</div>"
+        data_list = "<div style='display: flex; max-width: 280px; height: 140px; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: rgba(255, 0, 0, 0.832); box-shadow: 0 0 0 3px #2d2d2d, 0 0 0 3px #000000; font-size: 84px; font-weight: bold; text-shadow: 4px 4px 4px #000000;'>TAP OUT</div>"
         data_str = data_list
     elif data_str=="bluetapout":
         print("Blue Tap Out");
-        data_list = "<div style='display: flex; max-width: 280px; height: 140px; border: 2px solid #2d2d2d; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: blue; font-size: 84px; font-weight: bold;'>TAP OUT</div>"
+        data_list = "<div style='display: flex; max-width: 280px; height: 140px; color: #ffffff; text-align: center; justify-content: center; align-items: center; font-family: Impact; background-color: rgba(0, 0, 255, 0.832); box-shadow: 0 0 0 3px #2d2d2d, 0 0 0 3px #000000; font-size: 84px; font-weight: bold; text-shadow: 4px 4px 4px #000000;'>TAP OUT</div>"
         data_str = data_list
     else:
         # Clean up input data.
