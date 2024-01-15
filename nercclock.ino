@@ -149,14 +149,24 @@ void setup() {
 }
 
 // ## DMX Light from Ed ##
-// 1: Master Dimmer(0~255) RGBW-Dark to Full Brightness; 
-// 2. Strobe(0~255) from slow to fast; 
-// 3. 0-17: Red; 18-35: Green; 36-53: Blue; 54--71: White; 72-88: Yellow; 89-107: Light Blue; 108-125: Purple; 126-127 Full Light; 128-169: Red & Blue Pulse Change; 170-210: 6 Color Pulse Change; 211-255: Gradient Change 
-// 4. Function Speed - Slow to Fast; 
-// 5. Red(O~255) - Dark to Full Brightness; 
-// 6. Green (0~255) - Dark to Full Brightness; 
-// 7. Blue (0~255) - Dark to Full Brightness;
-// 8, White (0~255) - Dark to Full Brightness.
+// 1 - Master Dimmer (0-255) (RGBW-Dark to Full Brightness)
+// 2 - Strobe(0-255) from slow to fast
+// 3 - Red (0-17)
+//   - Green (18-35)
+//   - Blue (36-53)
+//   - White (54--71)
+//   - Yellow (72-88) 
+//   - Light Blue (89-107)
+//   - Purple (108-125)
+//   - Full Light (126-127)
+//   - Red & Blue Pulse Change (128-169)
+//   - 6 Color Pulse Change (170-210)
+//   - Gradient Change (211-255) 
+// 4 - Function Speed - Slow to Fast 
+// 5 - Red (O-255) - Dark to Full Brightness 
+// 6 - Green (0-255) - Dark to Full Brightness 
+// 7 - Blue (0-255) - Dark to Full Brightness
+// 8 - White (0-255) - Dark to Full Brightness
 
 // ## DMX Rockville Bars
 // 1 - Red (0-255)
@@ -173,6 +183,24 @@ void setup() {
 //   - Sound mode 28-139 A1-A8
 //   - Sound mode 140-153 B0 (runs the entire B cycle all modes)
 //   - Sound mode 154-255 B1-B8
+
+// ## Colorkey WaferPar Hex 5 (Since Jon likes fixing broken cheap lights) ##
+// ## Use 10 Ch DMX ##
+// 1 - Master Dimmer RGBWA+UV(from dark to bright) (0-255) 
+// 2 - Red (0-255)
+// 3 - Green (0-255)
+// 4 - Blue (0-255)
+// 5 - White (0-255)
+// 6 - Amber (0-255)
+// 7 - UV (0-255)
+// 8 - Strobe (0~255) (from slow to fast)
+// 9 - No Function (0-50)
+//   - Colors Output (51-100)
+//   - Colors Jump Changing (101-150)
+//   - Colors growing/fading (151-200)
+//   - Colors Pulse Change (201-250)
+//   - Sound-Active (251-255)
+// 10 - Speed for Channel 9 effects (0-255)
 
 void loop() {
 
