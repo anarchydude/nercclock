@@ -128,7 +128,7 @@ void setup() {
 
   //DMX Defaults
   dmx_master.enable (); 
-  dmx_master.setChannelRange ( 1, 24, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
+  dmx_master.setChannelRange ( 1, 37, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
   //Full Brightness Dimmer - ( DMX channel, byte_value )
   //dmx_master.setChannelValue (1,255); // By default, we are setting the master dimmer of the Amazon light to full brightness.
   //dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
@@ -137,6 +137,7 @@ void setup() {
   dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
   dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
   dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue (27,191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
 
   //rainbow(0);
   strip.clear();
