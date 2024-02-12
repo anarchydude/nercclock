@@ -128,7 +128,7 @@ void setup() {
 
   //DMX Defaults
   dmx_master.enable (); 
-  dmx_master.setChannelRange ( 1, 37, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
+  dmx_master.setChannelRange ( 1, 33, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
   //Full Brightness Dimmer - ( DMX channel, byte_value )
   //dmx_master.setChannelValue (1,255); // By default, we are setting the master dimmer of the Amazon light to full brightness.
   //dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
@@ -137,7 +137,7 @@ void setup() {
   dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
   dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
   dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue (27,191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
+  dmx_master.setChannelValue (23,191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
 
   //rainbow(0);
   strip.clear();
@@ -317,9 +317,10 @@ void loop() {
         led_num(1, c2, color);
         led_num(2, c3, color);
         strip.show();
-        dmx_master.setChannelValue( 3, 88);
-        dmx_master.setChannelRange( 9, 10, 190);
-        dmx_master.setChannelRange( 16, 17, 190);
+        dmx_master.setChannelValue ( 3, 88);
+        dmx_master.setChannelRange ( 9, 10, 190);
+        dmx_master.setChannelRange ( 16, 17, 190);
+        dmx_master.setChannelRange ( 24, 25, 175);
       } else { // could possibly let it ride underneath the parent if statement, but this ensures it runs opposite of the above statment.
         // add a clearing of the DMX lights here
         pause_start();
@@ -590,36 +591,44 @@ void tree_start() {
   // Future change, a smooth pulse
   dmx_master.setChannelValue ( 4, 30);
   dmx_master.setChannelValue ( 3, 88);
-  dmx_master.setChannelRange( 9, 10, 190);
-  dmx_master.setChannelRange( 16, 17, 190);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 35);
   dmx_master.setChannelValue ( 10, 255);
   dmx_master.setChannelValue ( 17, 255);
+  dmx_master.setChannelValue ( 25, 255);
   delay (1000); // The right amount of glow.. but the clock won't change over fast enough.
   dmx_master.setChannelRange ( 3, 4, 0);
   dmx_master.setChannelValue ( 10, 0);
   dmx_master.setChannelValue ( 17, 0);
+  dmx_master.setChannelValue ( 25, 0);
 }
 
 void tree_stop() {
@@ -635,10 +644,12 @@ void tree_stop() {
   dmx_master.setChannelValue ( 3, 17);
   dmx_master.setChannelValue ( 9, 255);
   dmx_master.setChannelValue ( 16, 255);
+  dmx_master.setChannelValue ( 24, 255);
   delay (12000);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelValue ( 9, 0);
   dmx_master.setChannelValue ( 16, 0);
+  dmx_master.setChannelValue ( 24, 0);
   strip.clear();
   strip.show();
   run_clock = false;
@@ -669,21 +680,27 @@ void tap_out_red() {
   dmx_master.setChannelValue ( 13, 180);
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
+  dmx_master.setChannelValue ( 24, 255);
+  dmx_master.setChannelValue ( 30, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
   dmx_master.setChannelValue ( 9, 0);
   dmx_master.setChannelValue ( 13, 0);
   dmx_master.setChannelValue ( 16, 0);
   dmx_master.setChannelValue ( 20, 0);
+  dmx_master.setChannelValue ( 24, 0);
+  dmx_master.setChannelValue ( 30, 0);
 
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
   //dmx_master.setChannelValue ( 2, 255);
   dmx_master.setChannelValue ( 3, 17);
   dmx_master.setChannelValue ( 9, 255);
+  dmx_master.setChannelValue ( 24, 255);
   delay (12000);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelValue ( 9, 0);
+  dmx_master.setChannelValue ( 24, 0);
   //dmx_master.setChannelValue ( 2, 0);
   strip.clear();
   strip.show();
@@ -716,20 +733,26 @@ void tap_out_blue() {
   dmx_master.setChannelValue ( 13, 180);
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
+  dmx_master.setChannelValue ( 26, 255);
+  dmx_master.setChannelValue ( 30, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
   dmx_master.setChannelValue ( 9, 0);
   dmx_master.setChannelValue ( 13, 0);
   dmx_master.setChannelValue ( 16, 0);
   dmx_master.setChannelValue ( 20, 0);
+  dmx_master.setChannelValue ( 26, 0);
+  dmx_master.setChannelValue ( 30, 0);
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
   //dmx_master.setChannelValue ( 1, 255);
   dmx_master.setChannelValue ( 3, 53);
   dmx_master.setChannelValue ( 18, 255);
+  dmx_master.setChannelValue ( 26, 255);
   delay (12000);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelValue ( 18, 0);
+  dmx_master.setChannelValue ( 26, 0);
   //dmx_master.setChannelValue ( 2, 0);
   strip.clear();
   strip.show();
@@ -761,39 +784,48 @@ void pause_start() {
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (100); //Possibly move up to 200ms, ran out of time to test
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0101); // Need to let sound play concurrently with the start of the clock.
   // Future change, a smooth pulse
   dmx_master.setChannelValue ( 4, 30);
   dmx_master.setChannelValue ( 3, 88);
-  dmx_master.setChannelRange( 9, 10, 190);
-  dmx_master.setChannelRange( 16, 17, 190);
+  dmx_master.setChannelRange ( 9, 10, 190);
+  dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
+  dmx_master.setChannelRange ( 24, 25, 175);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
   dmx_master.setChannelRange ( 16, 17, 0);
+  dmx_master.setChannelRange ( 24, 25, 0);
   delay (250);
   dmx_master.setChannelValue ( 3, 35);
   dmx_master.setChannelValue ( 10, 255);
   dmx_master.setChannelValue ( 17, 255);
+  dmx_master.setChannelValue ( 25, 255);
   delay (1000); // The right amount of glow.. but the clock won't change over fast enough.
   dmx_master.setChannelRange ( 3, 4, 0);
   dmx_master.setChannelValue ( 10, 0);
   dmx_master.setChannelValue ( 17, 0);
+  dmx_master.setChannelValue ( 25, 0);
 }
