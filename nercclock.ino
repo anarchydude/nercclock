@@ -128,16 +128,16 @@ void setup() {
 
   //DMX Defaults
   dmx_master.enable (); 
-  dmx_master.setChannelRange ( 1, 33, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
+  dmx_master.setChannelRange ( 1, 33, 0); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
   //Full Brightness Dimmer - ( DMX channel, byte_value )
   //dmx_master.setChannelValue (1,255); // By default, we are setting the master dimmer of the Amazon light to full brightness.
   //dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
   //dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
   //Not so full brightness dimmer - ( DMX channel, byte_value )
-  dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
-  dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue (23,191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
+  dmx_master.setChannelValue ( 1, 191); // setting the Amazon master dimmer to 3/4 brightness.
+  dmx_master.setChannelValue ( 12, 123); // Setting Red square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue ( 19, 123); // Setting Blue square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue ( 23, 191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
 
   //rainbow(0);
   strip.clear();
@@ -261,10 +261,10 @@ void loop() {
       active = true; //move to judge start
     }
 
-    if ((ready_r == true) and (ready_b == true) and (waiting_for_players == false) and (active == true)) {
-      Serial1.print("bothready");
-      delay(1000);
-    }
+    //if ((ready_r == true) and (ready_b == true) and (waiting_for_players == false) and (active == true)) {
+    //  Serial1.print("bothready");
+    //  delay(1000);
+    //}
 
     //Judge 2 minute set
     // If the 2 min button is pressed, set clk time int to 120, light up 2 min, turn off 3 and 5 min lights
