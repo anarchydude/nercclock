@@ -31,7 +31,7 @@
 #define stopb 26
 
 //DMX
-#define DMX_MASTER_CHANNELS   24
+#define DMX_MASTER_CHANNELS   34
 #define RXEN_PIN                2
 DMX_Master        dmx_master ( DMX_MASTER_CHANNELS, RXEN_PIN );
 
@@ -128,16 +128,16 @@ void setup() {
 
   //DMX Defaults
   dmx_master.enable (); 
-  dmx_master.setChannelRange ( 1, 33, 0); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
+  dmx_master.setChannelRange ( 1, 34, 0 ); // ( begin_channel, end_channel, byte_value ) This sets all channels between begin and end to the value specified 
   //Full Brightness Dimmer - ( DMX channel, byte_value )
   //dmx_master.setChannelValue (1,255); // By default, we are setting the master dimmer of the Amazon light to full brightness.
   //dmx_master.setChannelValue (12,255); // Setting Red square Rockville bar to full brightness dimmer.
   //dmx_master.setChannelValue (19,255); // Setting Blue square Rockville bar to full brightness dimmer.
   //Not so full brightness dimmer - ( DMX channel, byte_value )
-  dmx_master.setChannelValue ( 1, 191); // setting the Amazon master dimmer to 3/4 brightness.
-  dmx_master.setChannelValue ( 12, 123); // Setting Red square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue ( 19, 123); // Setting Blue square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue ( 23, 191); // Setting El Cheapo light dimmer to 3/4 to match the Amazon one..
+  dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
+  dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
+  dmx_master.setChannelValue (23,191); // setting the Waferpar busted light master dimmer to 3/4 brightness.
 
   //rainbow(0);
   strip.clear();
@@ -170,38 +170,38 @@ void setup() {
 // 8 - White (0-255) - Dark to Full Brightness
 
 // ## DMX Rockville Bars
-// 1 - Red (0-255)
-// 2 - Green (0-255)
-// 3 - Blue (0-255)
-// 4 - Master Dimmer (0-255)
-// 5 - If ch 7 set to 0, Strobe speed (off 0-255 full)
-//   - If ch 7 set to 1-255, Running speed (0-255)
-// 6 - Chase mode (0-25) Mode 0, cycles through chases 1-8
-//   - Chase mode (26-255) Modes 1-9
-// 7 - Dimmer mode 0
-//   - Chase mode 1-13
-//   - Sound Mode 14-27 A0 (runs the entire A cycle all modes)
-//   - Sound mode 28-139 A1-A8
-//   - Sound mode 140-153 B0 (runs the entire B cycle all modes)
-//   - Sound mode 154-255 B1-B8
+// 1 (9,16) - Red (0-255)
+// 2 (10,17) - Green (0-255)
+// 3 (11,18) - Blue (0-255)
+// 4 (12,19) - Master Dimmer (0-255)
+// 5 (13,20) - If ch 7 set to 0, Strobe speed (off 0-255 full)
+//           - If ch 7 set to 1-255, Running speed (0-255)
+// 6 (14,21) - Chase mode (0-25) Mode 0, cycles through chases 1-8
+//           - Chase mode (26-255) Modes 1-9
+// 7 (15,22) - Dimmer mode 0
+//           - Chase mode 1-13
+//           - Sound Mode 14-27 A0 (runs the entire A cycle all modes)
+//           - Sound mode 28-139 A1-A8
+//           - Sound mode 140-153 B0 (runs the entire B cycle all modes)
+//           - Sound mode 154-255 B1-B8
 
 // ## Colorkey WaferPar Hex 5 (Since Jon likes fixing broken cheap lights) ##
 // ## Use 10 Ch DMX ##
-// 1 - Master Dimmer RGBWA+UV(from dark to bright) (0-255) 
-// 2 - Red (0-255)
-// 3 - Green (0-255)
-// 4 - Blue (0-255)
-// 5 - White (0-255)
-// 6 - Amber (0-255)
-// 7 - UV (0-255)
-// 8 - Strobe (0~255) (from slow to fast)
-// 9 - No Function (0-50)
-//   - Colors Output (51-100)
-//   - Colors Jump Changing (101-150)
-//   - Colors growing/fading (151-200)
-//   - Colors Pulse Change (201-250)
-//   - Sound-Active (251-255)
-// 10 - Speed for Channel 9 effects (0-255)
+// 1 (23) - Master Dimmer RGBWA+UV(from dark to bright) (0-255) 
+// 2 (24) - Red (0-255)
+// 3 (25) - Green (0-255)
+// 4 (26) - Blue (0-255)
+// 5 (27) - White (0-255)
+// 6 (28) - Amber (0-255)
+// 7 (29) - UV (0-255)
+// 8 (30) - Strobe (0~255) (from slow to fast)
+// 9 (31) - No Function (0-50)
+//        - Colors Output (51-100)
+//        - Colors Jump Changing (101-150)
+//        - Colors growing/fading (151-200)
+//        - Colors Pulse Change (201-250)
+//        - Sound-Active (251-255)
+// 10 (32)- Speed for Channel 9 effects (0-255)
 
 void loop() {
 
@@ -239,15 +239,15 @@ void loop() {
       digitalWrite(LED_B, flash);
     }
 
-    /*if ((ready_r == true) and (waiting_for_players == true)) {
-      Serial1.print("redready");
-      delay(1000);
-    }*/
+    //if ((ready_r == true) and (waiting_for_players == true)) {
+    //  Serial1.print("redready");
+    //  delay(1000);
+    //}
 
-    /*if ((ready_b == true) and (waiting_for_players == true)) {
-      Serial1.print("blueready");
-      delay(1000);
-    }*/
+    //if ((ready_b == true) and (waiting_for_players == true)) {
+    //  Serial1.print("blueready");
+    //  delay(1000);
+    //}
     
     // Start override. If the start button is pressed for 2 seconds, set both players ready, which kicks off judge start.. shouldn't kick it off TBH
     if(start_db.pressedFor(2000)) {
@@ -317,10 +317,10 @@ void loop() {
         led_num(1, c2, color);
         led_num(2, c3, color);
         strip.show();
-        dmx_master.setChannelValue ( 3, 88);
-        dmx_master.setChannelRange ( 9, 10, 190);
-        dmx_master.setChannelRange ( 16, 17, 190);
-        dmx_master.setChannelRange ( 24, 25, 175);
+        dmx_master.setChannelValue( 3, 88);
+        dmx_master.setChannelRange( 9, 10, 190);
+        dmx_master.setChannelRange( 16, 17, 190);
+        dmx_master.setChannelRange( 24, 25, 190);
       } else { // could possibly let it ride underneath the parent if statement, but this ensures it runs opposite of the above statment.
         // add a clearing of the DMX lights here
         pause_start();
@@ -566,7 +566,7 @@ void red_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0103);
   ready_r = true;
   digitalWrite(LED_R,HIGH);
-  led_num(2,0,RED); // Set right digit (2) to "0", color RED, then show it on the strip.
+  led_num(0,0,RED); // Set left digit (0) to "0", color RED, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 9, 255);
   //dmx_master.setChannelValue ( 3, 17 ); If just running the Amazon light, this would be the eqivalent
@@ -576,7 +576,7 @@ void blue_ready() {
   sendCommand(CMD_PLAY_WITHFOLDER, 0x0102);
   ready_b = true;
   digitalWrite(LED_B,HIGH);
-  led_num(0,0,BLUE); // Set left digit (0) to "0", color BLUE, then show it on the strip.
+  led_num(2,0,BLUE); // Set right digit (2) to "0", color BLUE, then show it on the strip.
   strip.show();
   dmx_master.setChannelValue ( 18, 255);
   //dmx_master.setChannelValue ( 3, 53); If just running the Amazon light, this would be the eqivalent
@@ -593,7 +593,7 @@ void tree_start() {
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
-  dmx_master.setChannelRange ( 24, 25, 175);
+  dmx_master.setChannelRange ( 24, 25, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
@@ -603,7 +603,7 @@ void tree_start() {
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
-  dmx_master.setChannelRange ( 24, 25, 175);
+  dmx_master.setChannelRange ( 24, 25, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
@@ -613,7 +613,7 @@ void tree_start() {
   dmx_master.setChannelValue ( 3, 88);
   dmx_master.setChannelRange ( 9, 10, 190);
   dmx_master.setChannelRange ( 16, 17, 190);
-  dmx_master.setChannelRange ( 24, 25, 175);
+  dmx_master.setChannelRange ( 24, 25, 190);
   delay (750);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelRange ( 9, 10, 0);
@@ -680,7 +680,7 @@ void tap_out_red() {
   dmx_master.setChannelValue ( 13, 180);
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
-  dmx_master.setChannelValue ( 24, 255);
+  dmx_master.setChannelValue ( 24, 180);
   dmx_master.setChannelValue ( 30, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
@@ -696,7 +696,7 @@ void tap_out_red() {
   //dmx_master.setChannelValue ( 2, 255);
   dmx_master.setChannelValue ( 3, 17);
   dmx_master.setChannelValue ( 9, 255);
-  dmx_master.setChannelValue ( 24, 255);
+  dmx_master.setChannelValue ( 24, 180);
   delay (12000);
   dmx_master.setChannelValue ( 3, 0);
   dmx_master.setChannelValue ( 9, 0);
@@ -727,13 +727,13 @@ void tap_out_blue() {
   waiting_for_players = true;
   strip.clear();
   strip.show();
-  dmx_master.setChannelValue ( 2, 200); // Set the strobe
-  dmx_master.setChannelValue ( 3, 17);  // Flash red 
+  dmx_master.setChannelValue ( 2, 200);
+  dmx_master.setChannelValue ( 3, 17);
   dmx_master.setChannelValue ( 9, 255);
   dmx_master.setChannelValue ( 13, 180);
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
-  dmx_master.setChannelValue ( 26, 255);
+  dmx_master.setChannelValue ( 24, 180);
   dmx_master.setChannelValue ( 30, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
@@ -741,7 +741,7 @@ void tap_out_blue() {
   dmx_master.setChannelValue ( 13, 0);
   dmx_master.setChannelValue ( 16, 0);
   dmx_master.setChannelValue ( 20, 0);
-  dmx_master.setChannelValue ( 26, 0);
+  dmx_master.setChannelValue ( 24, 0);
   dmx_master.setChannelValue ( 30, 0);
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
