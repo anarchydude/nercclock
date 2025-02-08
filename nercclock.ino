@@ -137,7 +137,7 @@ void setup() {
   dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
   dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
   dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue (23,191); // setting the Waferpar busted light master dimmer to 3/4 brightness.
+  dmx_master.setChannelValue (23,191); // setting the Waferpar busted light master dimmer to 3/4 brightness. Note this isn't exact yet..
 
   //rainbow(0);
   strip.clear();
@@ -681,7 +681,7 @@ void tap_out_red() {
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
   dmx_master.setChannelValue ( 24, 180);
-  dmx_master.setChannelValue ( 30, 200);
+  dmx_master.setChannelValue ( 31, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
   dmx_master.setChannelValue ( 9, 0);
@@ -689,7 +689,7 @@ void tap_out_red() {
   dmx_master.setChannelValue ( 16, 0);
   dmx_master.setChannelValue ( 20, 0);
   dmx_master.setChannelValue ( 24, 0);
-  dmx_master.setChannelValue ( 30, 0);
+  dmx_master.setChannelValue ( 31, 0);
 
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
@@ -734,7 +734,7 @@ void tap_out_blue() {
   dmx_master.setChannelValue ( 16, 255);
   dmx_master.setChannelValue ( 20, 180);
   dmx_master.setChannelValue ( 24, 180);
-  dmx_master.setChannelValue ( 30, 200);
+  dmx_master.setChannelValue ( 31, 200);
   delay (4000);
   dmx_master.setChannelRange ( 2, 3, 0);
   dmx_master.setChannelValue ( 9, 0);
@@ -742,7 +742,7 @@ void tap_out_blue() {
   dmx_master.setChannelValue ( 16, 0);
   dmx_master.setChannelValue ( 20, 0);
   dmx_master.setChannelValue ( 24, 0);
-  dmx_master.setChannelValue ( 30, 0);
+  dmx_master.setChannelValue ( 31, 0);
   digitalWrite(startl, false);
   digitalWrite(stopl, true);
   //dmx_master.setChannelValue ( 1, 255);
