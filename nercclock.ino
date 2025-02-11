@@ -137,7 +137,7 @@ void setup() {
   dmx_master.setChannelValue (1,191); // setting the Amazon master dimmer to 3/4 brightness.
   dmx_master.setChannelValue (12,123); // Setting Red square Rockville bar to half brightness dimmer.
   dmx_master.setChannelValue (19,123); // Setting Blue square Rockville bar to half brightness dimmer.
-  dmx_master.setChannelValue (23,191); // setting the Waferpar busted light master dimmer to 3/4 brightness. Note this isn't exact yet..
+  dmx_master.setChannelValue (30,191); // setting the Waferpar busted light master dimmer to 3/4 brightness. Note this isn't exact yet..
 
   //rainbow(0);
   strip.clear();
@@ -187,21 +187,21 @@ void setup() {
 
 // ## Colorkey WaferPar Hex 5 (Since Jon likes fixing broken cheap lights) ##
 // ## Use 10 Ch DMX ##
-// 1 (23) - Master Dimmer RGBWA+UV(from dark to bright) (0-255) 
-// 2 (24) - Red (0-255)
-// 3 (25) - Green (0-255)
-// 4 (26) - Blue (0-255)
-// 5 (27) - White (0-255)
-// 6 (28) - Amber (0-255)
-// 7 (29) - UV (0-255)
-// 8 (30) - Strobe (0~255) (from slow to fast)
-// 9 (31) - No Function (0-50)
+// 1 (24) - Red (0-255)
+// 2 (25) - Green (0-255)
+// 3 (26) - Blue (0-255)
+// 4 (27) - White (0-255)
+// 5 (28) - Amber (0-255)
+// 6 (29) - UV (0-255)
+// 7 (30) - Master Dimmer RGBWA+UV(from dark to bright) (0-255) 
+// 8 (31) - Strobe (0~255) (from slow to fast)
+// 9 (32) - No Function (0-50)
 //        - Colors Output (51-100)
 //        - Colors Jump Changing (101-150)
 //        - Colors growing/fading (151-200)
 //        - Colors Pulse Change (201-250)
 //        - Sound-Active (251-255)
-// 10 (32)- Speed for Channel 9 effects (0-255)
+// 10 (33)- Speed for Channel 9 effects (0-255)
 
 void loop() {
 
