@@ -12,8 +12,9 @@ This is the codebase for the new NERC timer. The clock hub runs off a Mega 2560 
 - Python, and pyserial package on whichever OS you are running the clock script from.
 - Conceptinetics library for Arduino: https://sourceforge.net/projects/dmxlibraryforar/
   - Other native arduino libs that are needed:
-    - JC_Button
-    - Adafruit NeoPixel
+    - JC_Button (2.1.3)
+    - Adafruit NeoPixel (1.12.0)
+    - (Note, at this time, one of these libs has corrupted the pause sequence, see specific version numbers above)
 - Serial MP3 Player Card. Ours has a YX5300 chipset.
   - Something like this: https://www.amazon.com/HiLetgo-YX5300-Control-Serial-Arduino/dp/B0725RHR4D
 - DMX Shield for Arduino. Ours uses a CTC-DRA-10-R2.
