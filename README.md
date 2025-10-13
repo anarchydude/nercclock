@@ -43,22 +43,41 @@ On macOS, use a package manager like MacPorts (sudo port install python3) or Hom
 
 On Linux, use your package manager (apt, yum, etc..) and install python3
 
-#### pyserial ####
+### pyserial ###
 
 A specific python serial package is needed for the pyserial script to run correctly since it needs to import 'serial'
 
 Download files from: http://pypi.python.org/pypi/pyserial
 Docs are at: https://pyserial.readthedocs.io/en/latest/pyserial.html#installation
 
-### Installing on Windows/macOS ###
+#### Installing on Windows ####
 
-Easiest way is with pip 
+Easiest way is with pip on Windows
 
 python3 -m pip install pyserial
 
 (If you have python symlinked to python3, just use python)
 
-### Installing Python/pyserial on Linux ###
+#### Installing on macOS
+
+Virtual Environments are now mandatory. pipx helps to create the venvs for you
+
+brew install pipx
+pipx install pyserial
+source /Users/username/.local/pipx/venvs/pyserial/bin/activate
+python3 /path/to/pyserial
+
+##### Determining port to use for USB serial
+
+source pyserial as above, then run:
+
+python3 -m serial.tools.list_ports
+
+Should be /dev/cu.usbserial-XXXXXXXX
+
+Put the full path in your pyserial python script for the port
+
+#### Installing Python/pyserial on Linux ####
 
 apt install python3 python3-serial
 
